@@ -25,14 +25,12 @@ GyrussEnemy::GyrussEnemy()
 }
 
 
-void GyrussEnemy::move()
+void GyrussEnemy::moveCircular()
 {
 	_radius = 100;
 	_x =  _radius*cos(_dTheta) + _xRefPoint;
 	_y =  _radius*sin(_dTheta) +  _yRefPoint;
 	EnemySprite.setPosition(_x, _y ) ;
-	// int changeinX = (_xRefPoint - _x)  ,changeinY = (_yRefPoint -  _y) ;
-		//EnemySprite.rotate(200) ;
 		_dTheta += 0.05f;
 }
 
@@ -46,83 +44,55 @@ void GyrussEnemy::moveOutwards(){
 	_y =  _radius*sin(_dTheta) +  _yRefPoint; 
 	
 	EnemySprite.setPosition(_x, _y ) ;
-	EnemySprite.setScale(_radius/100, _radius/200);
+	EnemySprite.setScale(_radius/850, _radius/875);
 	if(_radius  > 500){
-		_dTheta *= -1*randomAngle(); 
+		_dTheta += -1*randomAngle(); 
 		_radius = 0;
 	}
 }
 
-float tempTime = 0;
-void GyrussEnemy::updateScreen( sf::RenderWindow &window, vector<Collider> playerBullets)
-{	
-	float timeE = clockE.getElapsedTime().asSeconds ();
-	///this is were the enemy chooses the move
-	moveOutwards() ; 
-	////////////////////
-	float xDiff = _x - _xRefPoint;
-	float yDiff = _yRefPoint - _y;
-	tempTime += timeE;
-	if(tempTime > 0.1){
-		//cout << " enemy shooting" << endl;
-		//_enemyWeapon.enemyShoot(*this, "enemyBullet");
-		tempTime = 0;
-	}
-	timeE = clockE.restart().asSeconds();
-	//_enemyWeapon.weaponUpdate(window,sf::Vector2<float> (250,250), 1.0f);
-	_enemyCollider.update(EnemySprite.getGlobalBounds());
-	int i = 0;
-	if(_enemyCollider.collided(playerBullets,i) && !playerBullets.empty()){
-		if(playerBullets.at(i - 1).getTag() == "playerBullet"){
-			_isDead = true;
-			
-		}
-	}
-	//std::cout <<"x: " << _x << "y: " << _y << std::endl ; ,
-	window.draw(EnemySprite) ;
-}
-
-
 void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets){
-	_enemyCollider.update(EnemySprite.getGlobalBounds());
-	
-	moveOutwards() ; 
+	if(!_isDead){
+		_enemyCollider.update(EnemySprite.getGlobalBounds());
+		
+		moveCircular() ; 
 
-	auto i = 0;
-	for(auto& bullet:playerBullets){
-		if(_enemyCollider.collided(bullet.bulletCollider)){
-			if(bullet.bulletCollider.isCollided()){
-				continue;
-			}
-			bullet.bulletCollider.setCollisionStatus(true);
-			if(bullet.bulletCollider.getTag() == "playerBullet"){
-				_isDead = true;
+		
+		if(clockE.getElapsedTime().asSeconds() > 1.0f){
+			_enemyWeapon.enemyShoot(*this, "enemyBullet");
+			clockE.restart();
+		}
+		_enemyWeapon.weaponUpdate(window,sf::Vector2<float> (250,250), 1.0f);
+		_enemyCollider.update(EnemySprite.getGlobalBounds());
+		auto i = 0;
+		for(auto& bullet:playerBullets){
+			if(_enemyCollider.collided(bullet.bulletCollider)){
+				if(bullet.bulletCollider.isCollided()){
+					continue;
+				}
+				bullet.bulletCollider.setCollisionStatus(true);
+				if(bullet.bulletCollider.getTag() == "playerBullet"){
+					_isDead = true;
+				}
 			}
 		}
+	
 	}
-	window.draw(EnemySprite);
+		window.draw(EnemySprite);
 }
 
 
 
-void GyrussEnemy::enemySetup(sf::Texture texture,sf::Vector2f initialPosition, sf::Vector2f scale){
+void GyrussEnemy::enemySetup(sf::Texture texture){
 	EnemyTexture = texture;
-	EnemySprite.setPosition(initialPosition);
-	EnemySprite.setScale(scale);
+	EnemySprite.setTexture(EnemyTexture);
 }
 
 GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprite& enemyObject, EnemyType enemyType = EnemyType::ships)
 :_x{initPos.x} , _y{initPos.y}, _xRefPoint{refPoint.x}, _yRefPoint{refPoint.y} , EnemySprite{enemyObject}, _enemyType{enemyType}
 {
-	if(enemyType == EnemyType::asteroids){
-		_dTheta = randomAngle();
-		_radius = 0;
-	}
-}
 
-
-/*
-switch(enemyType){
+	switch(enemyType){
 		case EnemyType::ships:
 			break;
 		case EnemyType::satellites:
@@ -132,8 +102,28 @@ switch(enemyType){
 		case EnemyType::generator:
 			break;
 		case EnemyType::asteroids:
+			_dTheta = randomAngle();
+			_radius = 0;
 			break;
 		default:
 			break;
 	} 
-	*/
+}
+
+
+float calcAngle(float yDiff, float xDiff){
+	
+	float angle = atan(yDiff/(xDiff+ 0.00001f));
+	
+	if(yDiff >= 0 && xDiff >= 0){ //first quadrant
+		angle -= 4*atan(1)/2;
+	} else if (yDiff >= 0 && xDiff < 0){ //second quadrant
+		angle -= 4*atan(1)/2;
+	} else if (yDiff < 0 && xDiff < 0){ //third quadrant
+		angle += 4*atan(1)/2;
+	}else if (yDiff < 0 && xDiff >= 0){ //fourth quadrant
+		angle += 4*atan(1)/2;
+	}
+	
+	return angle;
+}

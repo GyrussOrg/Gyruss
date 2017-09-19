@@ -13,18 +13,12 @@ _2Dcollider{parentBounds}, _tag{"noNAme"}, _isCollided{false}
 }
 
 Collider::~Collider()
-{		
-		//if(_tag == "playerBullet" && !_isCollided){
-			//cout<< _tag << " Collider destroyed here" << endl;
-		//	_isCollided  = true;
-		//}
+{	
 }
 
 
 void Collider::update(sf::FloatRect parentBounds){
 	_2Dcollider = parentBounds;
-	if(_tag == "playerBullet")
-	cout << " bounds " <<	parentBounds.left << " " << parentBounds.top << endl;
 }
 
 
@@ -36,7 +30,6 @@ bool  Collider::collided(vector<Collider>& gameObjects, int& index){
 		for(auto i = 0; i < gameObjects.size(); i++){
 			if(_2Dcollider.intersects(gameObjects.at(i).getCollider())){
 				index++;
-				cout << _tag << " collided with " << gameObjects.at(i).getTag() << endl;
 				_isCollided = true;
 				gameObjects.at(i).setCollisionStatus(true);
 				return true;
@@ -53,3 +46,4 @@ bool  Collider::collided(Collider& gameObject){
 	}
 	return _2Dcollider.intersects(gameObject.getCollider());
 }
+

@@ -16,14 +16,12 @@ using namespace std;
 class Player
 {
 public:
-	//sf::Time timeP;
 	sf::Clock clockP;
 	const float PI = 4*atan(1);
 	Player(){}
 	Player(sf::Vector2u screenSize,float refX,float refY);
 	sf::Vector2f getPlayerPosition(){return _playerSprite.getPosition();}
 	float getPlayerRotation(){return _playerSprite.getRotation();}
-	//virtual float getAngle();
 	float getAngle(){return _angle;}
 	float getRadius(){return _radius;}
 	vector<Collider> getPlayerBulletsColliders(){return _gun.getBulletCollider();}

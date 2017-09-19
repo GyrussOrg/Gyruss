@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 int main()
 {   
 	//////////////////for checking frame rate
@@ -18,7 +19,7 @@ int main()
 	bool playGame = false;
 	//Weapon weapon;
     /////////////////////////////
-    sf::RenderWindow window(sf::VideoMode(500,500), "Try Game");
+    sf::RenderWindow window(sf::VideoMode(500,500), "Gyruss", sf::Style::Close);
     window.setFramerateLimit(60);
 	
 	///Background
@@ -38,11 +39,13 @@ int main()
 	
 	//list<GyrussEnemy> a(3); 
 	sf::Texture EnemyTexture;
-	EnemyTexture.loadFromFile("textures/enemy.png");
-	sf::Sprite EnemySprite;
+	EnemyTexture.loadFromFile("textures/asteroid.png");
+	sf::Sprite EnemySprite, DeadEnemySprite;
 	EnemySprite.setTexture(EnemyTexture) ;
-	vector<GyrussEnemy> enemies(5);
+	EnemySprite.setOrigin(sf::Vector2f(EnemyTexture.getSize().x*0.5,EnemyTexture.getSize().y*0.5));
 	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids);
+	GyrussEnemy enemies[5];
+	GyrussEnemy deadEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), DeadEnemySprite, EnemyType::asteroids);
 	
 	////////////////////////////
     Player mainPlayer(window.getSize(),250,250);
@@ -79,28 +82,17 @@ int main()
 			window.draw(background);
 			//////
 		} else {
-			auto tempFrames = countFrames;
 			window.draw(background);
-			for(auto it = enemies.begin(); (it != enemies.end()) && !enemies.empty(); it++){
-				auto &enemy = *it;
-				mainPlayer.update(window,countFrames,testEnemy.getEnemyBullets());
-				//if(tempFrames%2 == 0){
-					//enemy.updateScreen(window,mainPlayer.getPlayerBullets()) ;
-					testEnemy.updateScreen(window,mainPlayer.getPlayerBullets()) ;
-					tempFrames = 1;
-				//}
-				
-				if(enemy.isEnemyDead()){
-					enemies.erase(it);
-					//enemies = temp;
-					cout <<" enemy dead" << endl;
-					break;
+			for(auto i = 0; i < 5; i++){
+				mainPlayer.update(window,countFrames,enemies[i].getEnemyBullets());
+				enemies[i].updateScreen(window,mainPlayer.getPlayerBullets()) ;
+					
+				if(enemies[i].isEnemyDead()){
+					cout << "enemy " << i ;
+					enemies[i].enemySetup(EnemyTexture);
 				}
 			}
-			if(enemies.empty()){
-				mainPlayer.update(window,countFrames,testEnemy.getEnemyBullets());
-			}
-			
+			cout << endl;
 		}
 		
         window.display();
@@ -109,66 +101,3 @@ int main()
     return 0;
 }
 
-
-/*
-//////////////////////////////////////////////////////////////enemy
-#include <SFML/Graphics.hpp>
-#include "GyrussEnemy.h"
-#include "Player.h"
-#include "iostream"
-
-
-using namespace std ; 
-using namespace sf ; 
-
-int main()
-{
-	
-	//////Create Player ///////
-	Player player(sf::Vector2<unsigned int> (500,500), 250,250);
-	
-	/////////////////////////
-	
-	srand(time(0)) ; 
-	const int width  = 500 , length = 500;
-    sf::RenderWindow window(sf::VideoMode(width, length ), "Gyruss");
-	window.setFramerateLimit(60);
-	
-	Texture EnemyTexture ; 
-	EnemyTexture.loadFromFile("textures/enemy.png") ;
-	Sprite sEnemy(EnemyTexture) ;  
-	
-	sEnemy.setOrigin(20,20) ; 
-	int enemyCount = 1 ; 
-	GyrussEnemy a[1] ; 
-	
-	
-	//int x = 0 , y = 0 ,dx = 0 , dy = 0 ; 
-	//float timer=0 , delay = 0.07 ;
-	Clock clock ; 
-   
-    while (window.isOpen())
-    {
-		float time = clock.getElapsedTime().asSeconds() ; 
-		clock.restart() ;
-		timer +=time ;		
-		Event event  ; 
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-		window.clear() ; 
-
-		 
-		for(int i = 0 ; i < enemyCount ; i++)
-		{
-			a[i].updateScreen(window) ; 
-		}
-
-        window.display();
-    }
-
-    return 0;
-}
-*/

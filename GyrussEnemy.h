@@ -19,16 +19,15 @@ public:
     sf::Clock clockE;
 	GyrussEnemy();
 	GyrussEnemy(sf::Vector2f initPos , sf::Vector2f refPoint , sf::Sprite& enemyObject,EnemyType enemyType);
-	void enemySetup(sf::Texture texture,sf::Vector2f initialPosition, sf::Vector2f scale);
+	void enemySetup(sf::Texture texture);
 	sf::Vector2f getEnemyPosition(){return EnemySprite.getPosition();}
 	float getEnemyRotation(){return EnemySprite.getRotation();}
 	float getEnemyRadius(){ return _radius;}
 	float getEnemyAngle(){return _dTheta;}
 	vector<Collider> getEnemyBullets(){return _enemyWeapon.getBulletCollider();}
 	bool isEnemyDead(){return _isDead;}
-	void move() ; 
+	void moveCircular() ; 
 	void moveOutwards();
-	void updateScreen( sf::RenderWindow &window, vector<Collider> playerBullets); //remove later
 	void updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets);
 	int getX() {return _x ; }
 	int getY() {return _y ; }   

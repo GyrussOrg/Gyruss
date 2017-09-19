@@ -11,6 +11,8 @@ using namespace std;
 class Player;
 class GyrussEnemy;
 
+
+
 struct Bullet{
 		sf::Sprite bullet;
 		float xPos;
@@ -24,6 +26,7 @@ struct Bullet{
 		{
 			bullet.setPosition(position);
 			bullet.setRotation(rotation);
+			bullet.setOrigin(bullet.getTexture()->getSize().x*0.5f,bullet.getTexture()->getSize().y*0.5f);
 			bulletCollider.setTag(name);
 			xScale = bullet.getScale().x;
 			yScale = bullet.getScale().y;
@@ -32,11 +35,9 @@ struct Bullet{
 			xPos = radius*cos(angle) + refPoint.x;
 			yPos = radius*sin(angle) + refPoint.y;
 			bullet.setPosition(xPos,yPos);
-			bullet.setScale(xScale*radius/400, yScale*radius/600);
+			bullet.setScale(xScale*radius/300, yScale*radius/400);
 			bulletCollider.update(bullet.getGlobalBounds());
-			//cout << bulletCollider.getTag() << " radius " << radius << " angle " << angle << endl;
 		}
-		//~Bullet(){cout << bulletCollider.getTag() << " destroyed " << endl;
 };
 
 class Weapon
