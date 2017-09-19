@@ -58,3 +58,23 @@ void Player::update(sf::RenderWindow& window, int& countFrames, vector<Collider>
 	window.draw(_playerSprite);
 	timeP = clockP.restart();
 }
+/*
+virtual float Player::getAngle(){
+	float xDiff = _xPos - _xRef;
+	float yDiff = _yRef - _yPos;
+	
+	float angle = atan(yDiff/(xDiff+ 0.00001f))
+	
+	if(yDiff >= 0 && xDiff >= 0){ //first quadrant
+		angle -= 4*atan(1)/2;
+	} else if (yDiff >= 0 && xDiff < 0){ //second quadrant
+		angle -= 4*atan(1)/2;
+	} else if (yDiff < 0 && xDiff < 0){ //third quadrant
+		angle += 4*atan(1)/2;
+	}else if (yDiff < 0 && xDiff >= 0){ //fourth quadrant
+		angle += 4*atan(1)/2;
+	}
+	
+	return _angle;
+}
+*/

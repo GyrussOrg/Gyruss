@@ -11,8 +11,8 @@ GyrussEnemy::GyrussEnemy()
 		width = 500; 
 		EnemySprite.setTexture(EnemyTexture) ; 
 		int ts = 1 ;
-		_x = 0; 
-		_y=  0;
+		_x = 250; 
+		_y=  250;
 		
 		_xRefPoint = ((width-1)/2)*ts;
 		_yRefPoint = ((length -1)/2)*ts; 
@@ -24,26 +24,11 @@ GyrussEnemy::GyrussEnemy()
 	
 }
 
+
 void GyrussEnemy::move()
 {
 	_radius = 100;
-	//srand(time(0)) ; 
-	//_dx =+ ((2 - rand()%2) +  _dx) ; 
-	//_radius = sqrt(xDiff*xDiff + yDiff*yDiff);
-	//_dTheta = atan(yDiff/(xDiff + 0.001f));
-	/*
-	if(yDiff >= 0 && xDiff >= 0){ //first quadrant
-		_dTheta -= 4*atan(1)/2;
-	} else if (yDiff >= 0 && xDiff < 0){ //second quadrant
-		_dTheta -= 4*atan(1)/2;
-	} else if (yDiff < 0 && xDiff < 0){ //third quadrant
-		_dTheta += 4*atan(1)/2;
-	}else if (yDiff < 0 && xDiff >= 0){ //fourth quadrant
-		_dTheta += 4*atan(1)/2;
-	}
-	*/
 	_x =  _radius*cos(_dTheta) + _xRefPoint;
-	//_dy =+ ((2 - rand()%2)+ _dy ) ;
 	_y =  _radius*sin(_dTheta) +  _yRefPoint;
 	EnemySprite.setPosition(_x, _y ) ;
 	// int changeinX = (_xRefPoint - _x)  ,changeinY = (_yRefPoint -  _y) ;
@@ -51,13 +36,29 @@ void GyrussEnemy::move()
 		_dTheta += 0.05f;
 }
 
+float randomAngle(){
+	srand(time(0));
+	return 8*atan(1)/(rand()%13 + 1);
+}
+void GyrussEnemy::moveOutwards(){
+	_radius += 0.6f;
+	_x =  _radius*cos(_dTheta) + _xRefPoint;
+	_y =  _radius*sin(_dTheta) +  _yRefPoint; 
+	
+	EnemySprite.setPosition(_x, _y ) ;
+	EnemySprite.setScale(_radius/100, _radius/200);
+	if(_radius  > 500){
+		_dTheta *= -1*randomAngle(); 
+		_radius = 0;
+	}
+}
 
 float tempTime = 0;
 void GyrussEnemy::updateScreen( sf::RenderWindow &window, vector<Collider> playerBullets)
 {	
 	float timeE = clockE.getElapsedTime().asSeconds ();
 	///this is were the enemy chooses the move
-	move() ; 
+	moveOutwards() ; 
 	////////////////////
 	float xDiff = _x - _xRefPoint;
 	float yDiff = _yRefPoint - _y;
@@ -85,7 +86,7 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, vector<Collider> playe
 void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets){
 	_enemyCollider.update(EnemySprite.getGlobalBounds());
 	
-	move() ; 
+	moveOutwards() ; 
 
 	auto i = 0;
 	for(auto& bullet:playerBullets){
@@ -110,30 +111,29 @@ void GyrussEnemy::enemySetup(sf::Texture texture,sf::Vector2f initialPosition, s
 	EnemySprite.setScale(scale);
 }
 
-GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, EnemyType enemyType = EnemyType::ships){
-	sf::Texture temp ;
-	switch(enemyType){
+GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprite& enemyObject, EnemyType enemyType = EnemyType::ships)
+:_x{initPos.x} , _y{initPos.y}, _xRefPoint{refPoint.x}, _yRefPoint{refPoint.y} , EnemySprite{enemyObject}, _enemyType{enemyType}
+{
+	if(enemyType == EnemyType::asteroids){
+		_dTheta = randomAngle();
+		_radius = 0;
+	}
+}
+
+
+/*
+switch(enemyType){
 		case EnemyType::ships:
-			temp.loadFromFile("textures/enemy.png");
-			enemySetup(temp, initPos, sf::Vector2<float> (2,2));
 			break;
 		case EnemyType::satellites:
-			temp.loadFromFile("textures/game_sprite.png");
-			enemySetup(temp, initPos, sf::Vector2<float> (2,2));
 			break;
 		case EnemyType::laser:
-			temp.loadFromFile("textures/game_sprite.png");
-			enemySetup(temp, initPos, sf::Vector2<float> (2,2));
 			break;
 		case EnemyType::generator:
-			temp.loadFromFile("textures/game_sprite.png");
-			enemySetup(temp, initPos, sf::Vector2<float> (2,2));
 			break;
 		case EnemyType::asteroids:
-			temp.loadFromFile("textures/game_sprite.png");
-			enemySetup(temp, initPos, sf::Vector2<float> (2,2));
 			break;
 		default:
 			break;
 	} 
-}
+	*/

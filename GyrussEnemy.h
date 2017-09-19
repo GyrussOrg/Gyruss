@@ -5,6 +5,7 @@
 #include <deque>
 #include "Weapon.h"
 #include "Collider.h"
+#include <time.h>
 #include <iostream>
 
 using namespace std;
@@ -17,7 +18,7 @@ class GyrussEnemy
 public:
     sf::Clock clockE;
 	GyrussEnemy();
-	GyrussEnemy(sf::Vector2f initPos,EnemyType enemyType);
+	GyrussEnemy(sf::Vector2f initPos , sf::Vector2f refPoint , sf::Sprite& enemyObject,EnemyType enemyType);
 	void enemySetup(sf::Texture texture,sf::Vector2f initialPosition, sf::Vector2f scale);
 	sf::Vector2f getEnemyPosition(){return EnemySprite.getPosition();}
 	float getEnemyRotation(){return EnemySprite.getRotation();}
@@ -26,6 +27,7 @@ public:
 	vector<Collider> getEnemyBullets(){return _enemyWeapon.getBulletCollider();}
 	bool isEnemyDead(){return _isDead;}
 	void move() ; 
+	void moveOutwards();
 	void updateScreen( sf::RenderWindow &window, vector<Collider> playerBullets); //remove later
 	void updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets);
 	int getX() {return _x ; }

@@ -23,6 +23,7 @@ public:
 	Player(sf::Vector2u screenSize,float refX,float refY);
 	sf::Vector2f getPlayerPosition(){return _playerSprite.getPosition();}
 	float getPlayerRotation(){return _playerSprite.getRotation();}
+	//virtual float getAngle();
 	float getAngle(){return _angle;}
 	float getRadius(){return _radius;}
 	vector<Collider> getPlayerBulletsColliders(){return _gun.getBulletCollider();}
@@ -34,6 +35,8 @@ private:
 	float _angle;
 	float _refX;
 	float _refY;
+	float _xPos;
+	float _yPos;
 	Weapon _gun;
 	sf::Texture _playerTexture;
 	sf::Sprite _playerSprite;

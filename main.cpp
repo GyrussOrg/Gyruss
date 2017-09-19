@@ -37,8 +37,13 @@ int main()
 	//////Enemy ??????????
 	
 	//list<GyrussEnemy> a(3); 
+	sf::Texture EnemyTexture;
+	EnemyTexture.loadFromFile("textures/enemy.png");
+	sf::Sprite EnemySprite;
+	EnemySprite.setTexture(EnemyTexture) ;
 	vector<GyrussEnemy> enemies(5);
-	GyrussEnemy testEnemy;
+	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids);
+	
 	////////////////////////////
     Player mainPlayer(window.getSize(),250,250);
 	
@@ -78,10 +83,10 @@ int main()
 			window.draw(background);
 			for(auto it = enemies.begin(); (it != enemies.end()) && !enemies.empty(); it++){
 				auto &enemy = *it;
-				mainPlayer.update(window,countFrames,enemy.getEnemyBullets());
+				mainPlayer.update(window,countFrames,testEnemy.getEnemyBullets());
 				//if(tempFrames%2 == 0){
 					//enemy.updateScreen(window,mainPlayer.getPlayerBullets()) ;
-					enemy.updateScreen(window,mainPlayer.getPlayerBullets()) ;
+					testEnemy.updateScreen(window,mainPlayer.getPlayerBullets()) ;
 					tempFrames = 1;
 				//}
 				
