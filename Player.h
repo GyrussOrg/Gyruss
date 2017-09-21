@@ -28,7 +28,7 @@ public:
 	void moveRight();
 	int getPlayerLives(){return _lives;}
 	deque<Bullet>& getPlayerBullets(){return _gun.getBullets();}
-	void update(sf::RenderWindow& window,int& countFrames, vector<Collider> enemyBullets);
+	void update(sf::RenderWindow& window,int& countFrames, deque<Bullet>& enemyBullets);
 	~Player();
 private:
 	float _radius;

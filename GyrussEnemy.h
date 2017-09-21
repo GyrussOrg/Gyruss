@@ -24,7 +24,8 @@ public:
 	float getEnemyRotation(){return EnemySprite.getRotation();}
 	float getEnemyRadius(){ return _radius;}
 	float getEnemyAngle(){return _dTheta;}
-	vector<Collider> getEnemyBullets(){return _enemyWeapon.getBulletCollider();}
+	deque<Bullet>& getEnemyBullets(){return _enemyWeapon.getBullets();}
+	//vector<Collider> getEnemyBullets(){return _enemyWeapon.getBulletCollider();}
 	bool isEnemyDead(){return _isDead;}
 	float randomAngle(int EnemyID);
 	void getEnemyID(const int EnemyID ){_EnemyID = EnemyID;} ; 

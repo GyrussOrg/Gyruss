@@ -20,7 +20,7 @@ GyrussEnemy::GyrussEnemy()
 		_dy = 4 - rand()%8 ; 
 		
 		_enemyCollider.update(EnemySprite.getGlobalBounds());
-	
+		//allEnemies.push_back(*this);
 }
 
 
@@ -38,18 +38,18 @@ void GyrussEnemy::moveCircular()
 	int temp1 = (rand()%13 + 1);
 	float Temp =  8.0*atan(1.0)/temp1 ;
 	
-	cout  << EnemyID  <<"   rand number: "<< temp1 <<endl; 
+	//cout  << EnemyID  <<"   rand number: "<< temp1 <<endl; 
 	return  Temp* EnemyID ;
 }
 void GyrussEnemy::moveOutwards(){
 	_radius += 0.6f;
 	_dTheta = _dTheta ;
-	cout << "ID " << _EnemyID  << " anNGle  5" << _dTheta  <<endl; 
+	//cout << "ID " << _EnemyID  << " anNGle  5" << _dTheta  <<endl; 
 	_x =  _radius*cos(_dTheta) + _xRefPoint;
 	_y =  _radius*sin(_dTheta) +  _yRefPoint; 
 	
 	EnemySprite.setPosition(_x, _y ) ;
-	EnemySprite.setScale(_radius/300, _radius/300);
+	EnemySprite.setScale(_radius/800, _radius/875);
 	if(_radius  > 500){
 		_dTheta += -1*randomAngle(_EnemyID); 
 		_radius = 0;
@@ -121,6 +121,8 @@ GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprit
 		default:
 			break;
 	} 
+	
+	//allEnemies.push_back(*this);
 }
 
 
@@ -152,7 +154,7 @@ void GyrussEnemy::converging()
 		 _x= _radius *cos(_dTheta)  +_xRefPoint ; 
 		_y = _radius*sin(_dTheta) + _yRefPoint ;
 		EnemySprite.setPosition(_x, _y ) ;
-		cout << "asdedde x :   " << _radius << "    y:  "<< _y <<endl ;
+		//cout << "asdedde x :   " << _radius << "    y:  "<< _y <<endl ;
 		
 		//if( (_radius)  > _centreRadius*4   )
 		//{

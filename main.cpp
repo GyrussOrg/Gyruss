@@ -142,12 +142,18 @@ int main()
 				
 					
 				if(enemies[i].isEnemyDead()){
-					cout << "enemy " << i ;
+					//cout << "enemy " << i ;
 					enemies[i].enemySetup(EnemyTexture);
 					
 				}
 			}
-			cout << endl;
+			//cout << endl;
+		}
+		for(auto j = 0; j < mainPlayer.getPlayerLives(); j++){
+			sf::Sprite lives = playerSprite;
+			lives.setScale(0.15f,0.1f);
+			lives.setPosition(20*j + 30, 460);
+			window.draw(lives);
 		}
         window.display();
 		countFrames++;

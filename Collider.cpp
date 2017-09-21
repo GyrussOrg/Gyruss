@@ -44,6 +44,9 @@ bool  Collider::collided(Collider& gameObject){
 	if(_isCollided){
 		return false;
 	}
-	return _2Dcollider.intersects(gameObject.getCollider());
+	if(_2Dcollider.intersects(gameObject.getCollider())){
+		_isCollided = true;
+	}
+	return _isCollided;
 }
 
