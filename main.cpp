@@ -9,6 +9,15 @@
 
 using namespace std;
 
+void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
+{
+	for(int i = 0  ; i < NumberOfEnimes; i++)
+	{
+		//GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
+		//enemieVector.push_back(testEnemy);
+	}
+}
+
 
 int main()
 {   
@@ -43,12 +52,32 @@ int main()
 	sf::Sprite EnemySprite, DeadEnemySprite;
 	EnemySprite.setTexture(EnemyTexture) ;
 	EnemySprite.setOrigin(sf::Vector2f(EnemyTexture.getSize().x*0.5,EnemyTexture.getSize().y*0.5));
-	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids);
+	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
+	GyrussEnemy testEnemy1(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
 	GyrussEnemy enemies[5];
+	
+	vector<GyrussEnemy> VectorOfEnimies ; 
+	
+
+	
+	
+	//EnemiesManage(VectorOfEnimies, 5);
 	GyrussEnemy deadEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), DeadEnemySprite, EnemyType::asteroids);
 	
+	
+	float timer ; 
 	////////////////////////////
     Player mainPlayer(window.getSize(),250,250);
+	
+	
+	for(int i =0 ; i<5 ; i++ )
+	{
+		enemies[i].getEnemyID(i+1) ;
+		enemies[i].randomAngle(  i+1);
+		
+	}	
+	
+	
 	
     while(window.isOpen()){
         sf::Event event;
@@ -84,12 +113,27 @@ int main()
 		} else {
 			window.draw(background);
 			for(auto i = 0; i < 5; i++){
-				mainPlayer.update(window,countFrames,enemies[i].getEnemyBullets());
+				
+			float time = clock.getElapsedTime().asSeconds() ; 
+			clock.restart() ;
+			timer +=time ;
+				
+				//if (timer > 3 )
+				//{
+				enemies[i].getEnemyID(i+1) ;
+
+				timer = 0 ;
+				//}
+				
+				
 				enemies[i].updateScreen(window,mainPlayer.getPlayerBullets()) ;
+				mainPlayer.update(window,countFrames,enemies[i].getEnemyBullets());
+				
 					
 				if(enemies[i].isEnemyDead()){
 					cout << "enemy " << i ;
 					enemies[i].enemySetup(EnemyTexture);
+					
 				}
 			}
 			cout << endl;

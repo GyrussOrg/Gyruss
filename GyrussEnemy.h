@@ -26,6 +26,8 @@ public:
 	float getEnemyAngle(){return _dTheta;}
 	vector<Collider> getEnemyBullets(){return _enemyWeapon.getBulletCollider();}
 	bool isEnemyDead(){return _isDead;}
+	float randomAngle(int EnemyID);
+	void getEnemyID(const int EnemyID ){_EnemyID = EnemyID;} ; 
 	void moveCircular() ; 
 	void moveOutwards();
 	void updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets);
@@ -42,7 +44,8 @@ private:
 		int width; 
 		float _radius;
 		float _dTheta;
-		int _Maxenemy  ; 
+		int _Maxenemy;
+		int _EnemyID  ; 
 		float _x, _y,  _dx , _dy , _xRefPoint, _yRefPoint;
 		bool _isDead;
 		EnemyType _enemyType;
