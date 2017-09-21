@@ -24,6 +24,9 @@ public:
 	float getPlayerRotation(){return _playerSprite.getRotation();}
 	float getAngle(){return _angle;}
 	float getRadius(){return _radius;}
+	void moveLeft();
+	void moveRight();
+	int getPlayerLives(){return _lives;}
 	vector<Collider> getPlayerBulletsColliders(){return _gun.getBulletCollider();}
 	deque<Bullet>& getPlayerBullets(){return _gun.getBullets();}
 	void update(sf::RenderWindow& window,int& countFrames, vector<Collider> enemyBullets);
@@ -35,6 +38,7 @@ private:
 	float _refY;
 	float _xPos;
 	float _yPos;
+	int _lives;
 	Weapon _gun;
 	sf::Texture _playerTexture;
 	sf::Sprite _playerSprite;
