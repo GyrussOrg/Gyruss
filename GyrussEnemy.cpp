@@ -61,8 +61,11 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 	if(!_isDead){
 		_enemyCollider.update(EnemySprite.getGlobalBounds());
 		
-		moveOutwards() ; 
-
+	moveOutwards() ; 
+	//lemniscate(); 
+	 //converging() ;
+	// ArchimedesSpiral();
+	 //Limacons()  ;
 		
 		if(clockE.getElapsedTime().asSeconds() > 1.0f){
 			_enemyWeapon.enemyShoot(*this, "enemyBullet");
@@ -97,6 +100,10 @@ void GyrussEnemy::enemySetup(sf::Texture texture){
 GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprite& enemyObject, EnemyType enemyType = EnemyType::ships)
 :_x{initPos.x} , _y{initPos.y}, _xRefPoint{refPoint.x}, _yRefPoint{refPoint.y} , EnemySprite{enemyObject}, _enemyType{enemyType}
 {
+	
+		_centreRadius   = 15 ; 
+		_xscale = EnemySprite.getScale().x ;
+		_yscale = EnemySprite.getScale().y ;
 
 	switch(enemyType){
 		case EnemyType::ships:
@@ -133,3 +140,86 @@ float calcAngle(float yDiff, float xDiff){
 	
 	return angle;
 }
+
+
+void GyrussEnemy::converging() 
+{
+
+	// if( _radius  > _centreRadius )
+	 //{
+	 _dTheta = 0 ; 
+		_radius -= 1 ; 
+		 _x= _radius *cos(_dTheta)  +_xRefPoint ; 
+		_y = _radius*sin(_dTheta) + _yRefPoint ;
+		EnemySprite.setPosition(_x, _y ) ;
+		cout << "asdedde x :   " << _radius << "    y:  "<< _y <<endl ;
+		
+		//if( (_radius)  > _centreRadius*4   )
+		//{
+			//EnemySprite.setScale(  _xscale  * (_radius/200)   ,   _yscale * (_radius/200) );
+		//}	 
+
+	//}
+}
+
+
+
+
+void GyrussEnemy::lemniscate() 
+
+{
+	
+     
+	
+		_dTheta  += (0.01 * 2* 1 )/1   ;
+		int a = 200;
+		double TempCos =    fabs(cos(1 *_dTheta)) ;  		
+		
+		_x =  cos(_dTheta)*sqrt( pow(a,2) *   TempCos)    +_xRefPoint  ;
+		_y = sin(_dTheta)*sqrt( pow(a,2) *     TempCos )   +  _yRefPoint; 	
+		
+		EnemySprite.setPosition(_x, _y ) ;
+		
+		
+		
+		// _RadFromCentre   = sqrt( pow(_x- _xRefPoint   ,2 ) + pow(_y- _yRefPoint,2)); 
+		 
+
+		
+	
+	
+}
+
+void GyrussEnemy::ArchimedesSpiral() 
+{
+	
+	_dTheta  += 0.05    ;
+	_radius =  300 - (_dTheta*18)*2   ;
+	
+	if(_radius >= 0 )
+	{
+	_x = _radius*cos(_dTheta) + _xRefPoint  ; 
+	_y = _radius*sin(_dTheta) +    _yRefPoint;
+	
+	}
+	
+	EnemySprite.setPosition(_x, _y ) ;
+	
+
+	
+	
+}
+
+
+void GyrussEnemy::Limacons() 
+{
+	int a = 40 , b = 80 ;  
+	_dTheta +=0.01 ; 
+	_x = (a + b*sin(_dTheta))*cos(_dTheta)+_xRefPoint ;
+	_y = (a + b*sin(_dTheta))*sin(_dTheta)+ _yRefPoint;
+	EnemySprite.setPosition(_x, _y ) ;
+	
+	
+	
+}
+

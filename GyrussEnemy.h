@@ -30,6 +30,11 @@ public:
 	void getEnemyID(const int EnemyID ){_EnemyID = EnemyID;} ; 
 	void moveCircular() ; 
 	void moveOutwards();
+	void lemniscate() ;
+	void converging() ; //not working properly
+	void ArchimedesSpiral();
+	void Limacons()  ;
+	
 	void updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets);
 	int getX() {return _x ; }
 	int getY() {return _y ; }   
@@ -42,8 +47,8 @@ private:
 		sf::Sprite  EnemySprite ; 
 		int length; 
 		int width; 
-		float _radius;
-		float _dTheta;
+		float _radius,_centreRadius;
+		float _dTheta,_xscale,_yscale;
 		int _Maxenemy;
 		int _EnemyID  ; 
 		float _x, _y,  _dx , _dy , _xRefPoint, _yRefPoint;
