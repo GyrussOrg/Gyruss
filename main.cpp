@@ -19,6 +19,14 @@ void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
 }
 
 
+void createPlayer(sf::Sprite& player, sf::Texture &texture,string path){
+	texture.loadFromFile(path);
+	player.setTexture(texture);
+	player.setOrigin(texture.getSize().x*0.5, 0);
+	player.setScale(0.2,0.1);
+	player.setPosition(250, 450);
+}
+
 int main()
 {   
 	//////////////////for checking frame rate
@@ -67,7 +75,10 @@ int main()
 	
 	float timer ; 
 	////////////////////////////
-    Player mainPlayer(window.getSize(),250,250);
+	sf::Sprite playerSprite;
+	sf::Texture playerTexture;
+	createPlayer(playerSprite, playerTexture,"textures/player.png");
+    Player mainPlayer(playerSprite, window.getSize(),250,250);
 	
 	
 	for(int i =0 ; i<5 ; i++ )
@@ -138,7 +149,6 @@ int main()
 			}
 			cout << endl;
 		}
-		
         window.display();
 		countFrames++;
     }

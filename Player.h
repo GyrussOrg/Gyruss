@@ -19,7 +19,7 @@ public:
 	sf::Clock clockP;
 	const float PI = 4*atan(1);
 	Player(){}
-	Player(sf::Vector2u screenSize,float refX,float refY);
+	Player(sf::Sprite& sprite,sf::Vector2u screenSize,float refX,float refY);
 	sf::Vector2f getPlayerPosition(){return _playerSprite.getPosition();}
 	float getPlayerRotation(){return _playerSprite.getRotation();}
 	float getAngle(){return _angle;}
@@ -27,7 +27,6 @@ public:
 	void moveLeft();
 	void moveRight();
 	int getPlayerLives(){return _lives;}
-	vector<Collider> getPlayerBulletsColliders(){return _gun.getBulletCollider();}
 	deque<Bullet>& getPlayerBullets(){return _gun.getBullets();}
 	void update(sf::RenderWindow& window,int& countFrames, vector<Collider> enemyBullets);
 	~Player();
@@ -39,9 +38,8 @@ private:
 	float _xPos;
 	float _yPos;
 	int _lives;
-	Weapon _gun;
-	sf::Texture _playerTexture;
 	sf::Sprite _playerSprite;
+	Weapon _gun;
 	Collider _playerCollider;
 };
 

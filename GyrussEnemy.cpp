@@ -20,7 +20,6 @@ GyrussEnemy::GyrussEnemy()
 		_dy = 4 - rand()%8 ; 
 		
 		_enemyCollider.update(EnemySprite.getGlobalBounds());
-		_enemyCollider.setTag("enemyCollider");
 	
 }
 
@@ -117,6 +116,7 @@ GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprit
 		case EnemyType::asteroids:
 			_dTheta = randomAngle(_EnemyID);
 			_radius = 0;
+			_enemyCollider.setTag("asteroid");
 			break;
 		default:
 			break;

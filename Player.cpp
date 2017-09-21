@@ -1,18 +1,9 @@
 #include "Player.h"
 #include "Weapon.h"
 
-Player::Player(sf::Vector2u screenSize, float refX, float refY)
-:_radius{200.0f}, _angle{PI/2}, _refX{refX}, _refY{refY}, _xPos{250}, _yPos{450}, _lives{4}
-{
-		_playerTexture.loadFromFile("textures/player.png");
-		_playerSprite.setTexture(_playerTexture);
-		float scaleFactor = 10;
-		_playerSprite.setScale(500/(scaleFactor * (float)_playerSprite.getTextureRect().width),
-								500/(scaleFactor*(float)_playerSprite.getTextureRect().height));
-		_playerSprite.setPosition(_refX + _radius*cos(_angle), _refY + _radius*sin(_angle));
-		_playerSprite.setRotation(_angle*180/PI - 90);
-		_playerSprite.setOrigin(_playerTexture.getSize().x*0.4, _playerTexture.getSize().y*0);
-		
+Player::Player(sf::Sprite& sprite,sf::Vector2u screenSize, float refX, float refY)
+:_radius{200.0f}, _angle{PI/2}, _refX{refX}, _refY{refY}, _xPos{250}, _yPos{450}, _lives{4}, _playerSprite{sprite}
+{		
 		_playerCollider.update(_playerSprite.getGlobalBounds());
 		_playerCollider.setTag("playerCollider");
 }
@@ -20,7 +11,6 @@ Player::Player(sf::Vector2u screenSize, float refX, float refY)
 
 Player::~Player()
 {
-	//cout << "player deleted" << endl;
 }
 
 void  Player::moveLeft(){
