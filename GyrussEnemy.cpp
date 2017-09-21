@@ -4,7 +4,7 @@ GyrussEnemy::GyrussEnemy()
 {
 		_isDead = false;
 		_radius = 0.1f;
-		if(EnemyTexture.loadFromFile("textures/enemy.png") ){
+		if(EnemyTexture.loadFromFile("textures/asteroid.png") ){
 			cout << "enemy sprite loaded" << endl;
 		}
 		length = 500; 

@@ -2,7 +2,7 @@
 #include "Weapon.h"
 
 Player::Player(sf::Vector2u screenSize, float refX, float refY)
-:_radius{200.0f}, _angle{PI/2}, _refX{refX}, _refY{refY}
+:_radius{200.0f}, _angle{PI/2}, _refX{refX}, _refY{refY}, _xPos{250}, _yPos{450}, _lives{4}
 {
 		_playerTexture.loadFromFile("textures/player.png");
 		_playerSprite.setTexture(_playerTexture);
@@ -23,20 +23,27 @@ Player::~Player()
 	//cout << "player deleted" << endl;
 }
 
+void  Player::moveLeft(){
+		_angle += PI*clockP.getElapsedTime().asMilliseconds()/600;
+		_playerSprite.setPosition(_refX + _radius*cos(_angle), _refY + _radius*sin(_angle));
+		_playerSprite.setRotation(_angle*180/PI - 90);	
+}
+void Player::moveRight(){
+	_angle -= PI*clockP.getElapsedTime().asMilliseconds()/600;
+	_playerSprite.setPosition(_refX + _radius*cos(_angle), _refY + _radius*sin(_angle));
+	_playerSprite.setRotation(_angle*180/PI - 90);
+	
+}
+
 void Player::update(sf::RenderWindow& window, int& countFrames, vector<Collider> enemyBullets){
-	sf::Time timeP = clockP.getElapsedTime();
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-		_angle -= PI*timeP.asMilliseconds()/600;
-		_playerSprite.setPosition(_refX + _radius*cos(_angle), _refY + _radius*sin(_angle));
-		_playerSprite.setRotation(_angle*180/PI - 90);
+		moveRight();
 		//cout << _playerSprite.getPosition().x << " -,- " << _playerSprite.getPosition().y << endl;
 	}
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-		_angle += PI*timeP.asMilliseconds()/600;
-		_playerSprite.setPosition(_refX + _radius*cos(_angle), _refY + _radius*sin(_angle));
-		_playerSprite.setRotation(_angle*180/PI - 90);
+		moveLeft();
 		//cout << _playerSprite.getPosition().x << " -,- " << _playerSprite.getPosition().y << endl;
 	}
 	 
@@ -54,7 +61,7 @@ void Player::update(sf::RenderWindow& window, int& countFrames, vector<Collider>
 		//cout << "Collided with " << enemyBullets.at(i - 1).getTag() << endl;
 	}
 	window.draw(_playerSprite);
-	timeP = clockP.restart();
+	clockP.restart();
 }
 /*
 virtual float Player::getAngle(){
