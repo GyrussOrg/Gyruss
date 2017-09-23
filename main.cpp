@@ -6,8 +6,16 @@
 #include "Weapon.h"
 #include "Player.h"
 #include "GyrussEnemy.h"
+#include "string"
+#include  "sstream"
 
 using namespace std;
+
+
+
+
+
+
 
 void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
 {
@@ -19,7 +27,9 @@ void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
 }
 
 
-void createPlayer(sf::Sprite& player, sf::Texture &texture,string path){
+void createPlayer(sf::Sprite&
+
+ player, sf::Texture &texture,string path){
 	texture.loadFromFile(path);
 	player.setTexture(texture);
 	player.setOrigin(texture.getSize().x*0.5, 0);
@@ -36,16 +46,33 @@ int main()
 	bool playGame = false;
 	//Weapon weapon;
     /////////////////////////////
+	stringstream imagename  ;
+
+	string firstpartofname ="textures/background/Space_Warp_Speed_Effect_Background_HD_0";
+	int number = 80 ;
+	
+	imagename << firstpartofname << number <<".jpg" ; 
+	string streamedImageNamed  = imagename.str() ;  
+
     sf::RenderWindow window(sf::VideoMode(500,500), "Gyruss", sf::Style::Close);
     window.setFramerateLimit(60);
 	
 	///Background
 		sf::Texture backgroundTexture;
-		if(backgroundTexture.loadFromFile("textures/background.jpg")){
+		if(backgroundTexture.loadFromFile(streamedImageNamed)){
 			cout << "backgrund loaded" << endl;
 		}
+		
+		
 		sf::Sprite background(backgroundTexture);
-		background.setPosition(0,0);
+		
+		
+		
+		
+
+		
+		
+		//background.setPosition(0,0);
 		//background.setScale(500/( (float)background.getTextureRect().width),500/((float)background.getTextureRect().height));
 	//Splash screen
 	sf::Texture spT1,spT2;
@@ -57,7 +84,7 @@ int main()
 	//list<GyrussEnemy> a(3); 
 	sf::Texture EnemyTexture;
 	EnemyTexture.loadFromFile("textures/asteroid.png");
-	sf::Sprite EnemySprite, DeadEnemySprite;
+	sf::Sprite EnemySprite, DeadEnemySprite ;
 	EnemySprite.setTexture(EnemyTexture) ;
 	EnemySprite.setOrigin(sf::Vector2f(EnemyTexture.getSize().x*0.5,EnemyTexture.getSize().y*0.5));
 	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
@@ -67,13 +94,14 @@ int main()
 	vector<GyrussEnemy> VectorOfEnimies ; 
 	
 
-	
+
 	
 	//EnemiesManage(VectorOfEnimies, 5);
 	GyrussEnemy deadEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), DeadEnemySprite, EnemyType::asteroids);
 	
 	
 	float timer ; 
+	//float timer1 ; 
 	////////////////////////////
 	sf::Sprite playerSprite;
 	sf::Texture playerTexture;
@@ -88,11 +116,52 @@ int main()
 		
 	}	
 	
-	
+	int image_number  =80 ; 
 	
     while(window.isOpen()){
+		
+		imagename.str(std::string()) ;
+		window.draw(background);
+			float time1 = clock.getElapsedTime().asSeconds() ; 
+			//clock.restart() ;
+			float time = clock.getElapsedTime().asSeconds() ; 
+			clock.restart() ;
+			timer +=time ; 
+			
+			
+			
+
+if( image_number < 99)
+{				
+
+	if(timer > 0.1 )
+		{
+		image_number++ ;
+		number = image_number ;	
+		 imagename << firstpartofname << number <<".jpg" ; 
+		 streamedImageNamed  = imagename.str() ;  				
+		//cout <<image_number <<endl ; 
+		if(backgroundTexture.loadFromFile(streamedImageNamed)){
+		}
+		
+			
+			timer = 0 ;
+			window.draw(background);
+			}
+			
+			
+}else{
+	
+	image_number = 80 ; 
+	}			
+		
+		
+		
         sf::Event event;
         while(window.pollEvent(event)){
+			
+
+			
             switch (event.type){
             case sf::Event::Closed:
                 window.close();
@@ -125,15 +194,15 @@ int main()
 			window.draw(background);
 			for(auto i = 0; i < 5; i++){
 				
-			float time = clock.getElapsedTime().asSeconds() ; 
-			clock.restart() ;
-			timer +=time ;
+			//float time = clock.getElapsedTime().asSeconds() ; 
+			//clock.restart() ;
+			//timer +=time ;
 				
 				//if (timer > 3 )
 				//{
 				enemies[i].getEnemyID(i+1) ;
 
-				timer = 0 ;
+				//timer = 0 ;
 				//}
 				
 				

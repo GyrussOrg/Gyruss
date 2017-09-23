@@ -42,14 +42,14 @@ void GyrussEnemy::moveCircular()
 	return  Temp* EnemyID ;
 }
 void GyrussEnemy::moveOutwards(){
-	_radius += 0.6f;
+	_radius += 2.2f;
 	_dTheta = _dTheta ;
 	//cout << "ID " << _EnemyID  << " anNGle  5" << _dTheta  <<endl; 
 	_x =  _radius*cos(_dTheta) + _xRefPoint;
 	_y =  _radius*sin(_dTheta) +  _yRefPoint; 
 	
 	EnemySprite.setPosition(_x, _y ) ;
-	EnemySprite.setScale(_radius/800, _radius/875);
+	EnemySprite.setScale(_radius/2000, _radius/2000);
 	if(_radius  > 500){
 		_dTheta += -1*randomAngle(_EnemyID); 
 		_radius = 0;
@@ -173,7 +173,7 @@ void GyrussEnemy::lemniscate()
 	
      
 	
-		_dTheta  += (0.01 * 2* 1 )/1   ;
+		_dTheta  += (0.003 * 2* 1 )/1   ;
 		int a = 200;
 		double TempCos =    fabs(cos(1 *_dTheta)) ;  		
 		
@@ -182,7 +182,10 @@ void GyrussEnemy::lemniscate()
 		
 		EnemySprite.setPosition(_x, _y ) ;
 		
+		_radius = sqrt(  pow(  cos(_dTheta)*sqrt( pow(a,2) * TempCos)   ,2) + pow( sin(_dTheta)*sqrt( pow(a,2) *     TempCos )   ,2)    ); 
 		
+		EnemySprite.setScale(_radius/2000, _radius/2000 );
+		cout << _radius << endl ;
 		
 		// _RadFromCentre   = sqrt( pow(_x- _xRefPoint   ,2 ) + pow(_y- _yRefPoint,2)); 
 		 
@@ -204,10 +207,10 @@ void GyrussEnemy::ArchimedesSpiral()
 	_y = _radius*sin(_dTheta) +    _yRefPoint;
 	
 	}
-	
+	cout << _x<<" " << _y <<" " << _radius <<endl;
 	EnemySprite.setPosition(_x, _y ) ;
 	
-
+	EnemySprite.setScale(_radius/2000, _radius/2000 );
 	
 	
 }

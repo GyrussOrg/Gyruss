@@ -15,7 +15,7 @@ int main()
 	window.setFramerateLimit(60);
 	
 	Texture EnemyTexture ; 
-	EnemyTexture.loadFromFile("images/enemy.png") ;
+	EnemyTexture.loadFromFile("textures/Space_Warp_Speed_Effect_Background_HD_000.png" );
 	Sprite sEnemy(EnemyTexture) ;  
 	
 	sEnemy.setOrigin(20,20) ; 
@@ -50,19 +50,7 @@ int main()
 		
 		window.clear() ; 
 
-		 
-		for(int i = 0 ; i < enemyCount ; i++)
-		{
-			//sEnemy.setPosition(a[i].getX() , a[i].getY() );
-			//window.draw(sEnemy) ;
-			
-			a[i].updateScreen(window) ; 
-			
-			//sEnemy.setScale(sEnemy.getScale().x /1.005 , sEnemy.getScale().y /1.005    );
-			
-	 
 	
-		}
 
 
     
