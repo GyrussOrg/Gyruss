@@ -7,8 +7,8 @@ GyrussEnemy::GyrussEnemy()
 		if(EnemyTexture.loadFromFile("textures/asteroid.png") ){
 			cout << "enemy sprite loaded" << endl;
 		}
-		length = 500; 
-		width = 500; 
+		length = 500;
+		width = 500;
 		EnemySprite.setTexture(EnemyTexture) ; 
 		int ts = 1 ;
 		_x = 250; 
@@ -31,7 +31,7 @@ void GyrussEnemy::moveCircular(float scaleFactor, float radius)
 	_y =  _radius*sin(_dTheta) +  _yRefPoint;
 	EnemySprite.setPosition(_x, _y ) ;
 	EnemySprite.setScale(abs(_radius)/scaleFactor, abs(_radius)/scaleFactor);
-		_dTheta += 0.05f;
+		_dTheta += 0.01f;
 }
 
  float GyrussEnemy::randomAngle(int EnemyID){
@@ -54,10 +54,11 @@ void GyrussEnemy::moveOutwards(float scaleFactor, float speed){
 	if(_radius  > 500){
 		_dTheta += -1*randomAngle(_EnemyID); 
 		_radius = 0;
+		frames = 0;
 	}
 }
 
-void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets){
+void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets, float clock){
 	if(!_isDead){
 		_enemyCollider.update(EnemySprite.getGlobalBounds());
 		
@@ -73,11 +74,11 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 			break;
 		case EnemyType::generator:
 			if(_dTheta > 6.28f){
-				converging(200, 9.0f);
-				EnemySprite.rotate(30);
+				converging(1000, 9.0f, clock);
+				EnemySprite.rotate(10);
 			} else{
-				Limacons(500);
-				EnemySprite.rotate(1);
+				Limacons(1000);
+				EnemySprite.rotate(2);
 			}
 			break;
 		case EnemyType::asteroids:
@@ -88,10 +89,10 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 			break;
 	} 
 		if(_enemyType == EnemyType::ships){
-			if(clockE.getElapsedTime().asSeconds() > 1.0f){
+			//if(clockE.getElapsedTime().asSeconds() > 1.0f){
 				_enemyWeapon.enemyShoot(*this, "enemyBullet");
-				clockE.restart();
-			}
+				//clockE.restart();
+			//}
 			_enemyWeapon.weaponUpdate(window,sf::Vector2<float> (250,250), 1.0f);
 		}
 		_enemyCollider.update(EnemySprite.getGlobalBounds());
@@ -122,7 +123,7 @@ void GyrussEnemy::enemySetup(sf::Texture texture){
 GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprite& enemyObject, EnemyType enemyType = EnemyType::ships)
 :_x{initPos.x} , _y{initPos.y}, _xRefPoint{refPoint.x}, _yRefPoint{refPoint.y} , EnemySprite{enemyObject}, _enemyType{enemyType}
 {
-	
+		frames = 0;
 		_centreRadius   = 15 ; 
 		_xscale = EnemySprite.getScale().x ;
 		_yscale = EnemySprite.getScale().y ;
@@ -171,15 +172,20 @@ float calcAngle(float yDiff, float xDiff){
 }
 
 
-void GyrussEnemy::converging(float scaleFactor, float convergingRad) 
+void GyrussEnemy::converging(float scaleFactor, float convergingRad, float clock) 
 {
-
-	if(_radius > convergingRad){
-		moveOutwards(scaleFactor, -1.0f);
+	
+	if(_radius > convergingRad && frames < 180){
+		moveOutwards(scaleFactor, -0.1f);
 	}else{
-		 moveCircular(scaleFactor, convergingRad);
+		if(frames < 180){
+			frames++;
+			moveCircular(scaleFactor, convergingRad);
+		} else {
+			cout << frames << " <-- frames" << endl;
+			moveOutwards(scaleFactor, 1.0f);
+		}
 	}
-		
 }
 
 
@@ -237,7 +243,7 @@ void GyrussEnemy::ArchimedesSpiral(float scaleFactor)
 void GyrussEnemy::Limacons(float scaleFactor) 
 {
 	int a = 40 , b = 80 ;  
-	_dTheta +=0.01 ; 
+	_dTheta +=0.005f ; 
 	_x = (a + b*sin(_dTheta))*cos(_dTheta)+_xRefPoint ;
 	_y = (a + b*sin(_dTheta))*sin(_dTheta)+ _yRefPoint;
 	_radius = sqrt((_x - _xRefPoint)*(_x - _xRefPoint) + (_y - _yRefPoint)*(_y - _yRefPoint));

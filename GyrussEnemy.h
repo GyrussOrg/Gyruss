@@ -1,6 +1,6 @@
 #ifndef GYRUSSENEMY_H
 #define GYRUSSENEMY_H
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <cmath>
 #include <deque>
 #include "Weapon.h"
@@ -16,7 +16,6 @@ enum class EnemyType{
 class GyrussEnemy
 {
 public:
-    sf::Clock clockE;
 	GyrussEnemy();
 	GyrussEnemy(sf::Vector2f initPos , sf::Vector2f refPoint , sf::Sprite& enemyObject,EnemyType enemyType);
 	void enemySetup(sf::Texture texture);
@@ -25,18 +24,17 @@ public:
 	float getEnemyRadius(){ return _radius;}
 	float getEnemyAngle(){return _dTheta;}
 	deque<Bullet>& getEnemyBullets(){return _enemyWeapon.getBullets();}
-	//vector<Collider> getEnemyBullets(){return _enemyWeapon.getBulletCollider();}
 	bool isEnemyDead(){return _isDead;}
 	float randomAngle(int EnemyID);
 	void getEnemyID(const int EnemyID ){_EnemyID = EnemyID;} ; 
 	void moveCircular(float scaleFactor, float radius) ; 
 	void moveOutwards(float scaleFactor, float speed);
 	void lemniscate(float scaleFactor) ;
-	void converging(float scaleFactor ,float convergingRad) ; //not working properly
+	void converging(float scaleFactor ,float convergingRad, float clock) ; //not working properly
 	void ArchimedesSpiral(float scaleFactor);
 	void Limacons(float scaleFactor)  ;
 	
-	void updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets);
+	void updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets, float clock);
 	int getX() {return _x ; }
 	int getY() {return _y ; }   
 	
@@ -51,7 +49,7 @@ private:
 		float _radius,_centreRadius;
 		float _dTheta,_xscale,_yscale;
 		int _Maxenemy;
-		int _EnemyID  ; 
+		int _EnemyID , frames ; 
 		float _x, _y,  _dx , _dy , _xRefPoint, _yRefPoint;
 		bool _isDead;
 		EnemyType _enemyType;

@@ -24,11 +24,11 @@ public:
 	float getPlayerRotation(){return _playerSprite.getRotation();}
 	float getAngle(){return _angle;}
 	float getRadius(){return _radius;}
-	void moveLeft();
-	void moveRight();
+	void moveLeft(float time);
+	void moveRight(float time);
 	int getPlayerLives(){return _lives;}
 	deque<Bullet>& getPlayerBullets(){return _gun.getBullets();}
-	void update(sf::RenderWindow& window,int& countFrames, deque<Bullet>& enemyBullets);
+	void update(sf::RenderWindow& window,int countFrames, float time ,deque<Bullet>& enemyBullets);
 	~Player();
 private:
 	float _radius;

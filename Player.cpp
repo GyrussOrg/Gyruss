@@ -13,31 +13,31 @@ Player::~Player()
 {
 }
 
-void  Player::moveLeft(){
-		_angle += PI*clockP.getElapsedTime().asMilliseconds()/600;
+void  Player::moveLeft(float time){
+		_angle += PI*time/600;
 		_playerSprite.setPosition(_refX + _radius*cos(_angle), _refY + _radius*sin(_angle));
 		_playerSprite.setRotation(_angle*180/PI - 90);	
 }
-void Player::moveRight(){
-	_angle -= PI*clockP.getElapsedTime().asMilliseconds()/600;
+void Player::moveRight(float time){
+	_angle -= PI*time/600;
 	_playerSprite.setPosition(_refX + _radius*cos(_angle), _refY + _radius*sin(_angle));
 	_playerSprite.setRotation(_angle*180/PI - 90);
 	
 }
 
-void Player::update(sf::RenderWindow& window, int& countFrames, deque<Bullet>& enemyBullets){
+void Player::update(sf::RenderWindow& window, int countFrames, float time ,deque<Bullet>& enemyBullets){
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-		moveRight();
+		moveRight(time);
 		//cout << _playerSprite.getPosition().x << " -,- " << _playerSprite.getPosition().y << endl;
 	}
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-		moveLeft();
+		moveLeft(time);
 		//cout << _playerSprite.getPosition().x << " -,- " << _playerSprite.getPosition().y << endl;
 	}
 	 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && countFrames > 15){
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && (countFrames%7 == 0)){
 			_gun.playerShoot(*this,"playerBullet");
 			countFrames = 0;
 	}
@@ -59,7 +59,7 @@ void Player::update(sf::RenderWindow& window, int& countFrames, deque<Bullet>& e
 		_playerCollider.setCollisionStatus(false);
 	}
 	window.draw(_playerSprite);
-	clockP.restart();
+	//clockP.restart();
 }
 /*
 virtual float Player::getAngle(){
