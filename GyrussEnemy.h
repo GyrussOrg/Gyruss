@@ -29,12 +29,12 @@ public:
 	bool isEnemyDead(){return _isDead;}
 	float randomAngle(int EnemyID);
 	void getEnemyID(const int EnemyID ){_EnemyID = EnemyID;} ; 
-	void moveCircular() ; 
-	void moveOutwards();
-	void lemniscate() ;
-	void converging() ; //not working properly
-	void ArchimedesSpiral();
-	void Limacons()  ;
+	void moveCircular(float scaleFactor, float radius) ; 
+	void moveOutwards(float scaleFactor, float speed);
+	void lemniscate(float scaleFactor) ;
+	void converging(float scaleFactor ,float convergingRad) ; //not working properly
+	void ArchimedesSpiral(float scaleFactor);
+	void Limacons(float scaleFactor)  ;
 	
 	void updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets);
 	int getX() {return _x ; }
