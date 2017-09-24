@@ -27,9 +27,7 @@ void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
 }
 
 
-void createPlayer(sf::Sprite&
-
- player, sf::Texture &texture,string path){
+void createPlayer(sf::Sprite& player, sf::Texture &texture,string path){
 	texture.loadFromFile(path);
 	player.setTexture(texture);
 	player.setOrigin(texture.getSize().x*0.5, 0);
