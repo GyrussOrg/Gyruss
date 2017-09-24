@@ -60,11 +60,11 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 	if(!_isDead){
 		_enemyCollider.update(EnemySprite.getGlobalBounds());
 		
-	moveOutwards() ; 
-	//lemniscate(); 
-	 //converging() ;
-	// ArchimedesSpiral();
-	 //Limacons()  ;
+	//moveOutwards() ; 
+	//lemniscate();
+	//converging() ;
+	 //ArchimedesSpiral();
+	 Limacons()  ;
 		
 		if(clockE.getElapsedTime().asSeconds() > 1.0f){
 			_enemyWeapon.enemyShoot(*this, "enemyBullet");
@@ -149,11 +149,12 @@ void GyrussEnemy::converging()
 
 	// if( _radius  > _centreRadius )
 	 //{
-	 _dTheta = 0 ; 
-		_radius -= 1 ; 
-		 _x= _radius *cos(_dTheta)  +_xRefPoint ; 
-		_y = _radius*sin(_dTheta) + _yRefPoint ;
-		EnemySprite.setPosition(_x, _y ) ;
+	 _dTheta += 0.01f ; 
+	_radius = 9 ; 
+	 _x= _radius *cos(_dTheta)  +_xRefPoint ; 
+	_y = _radius*sin(_dTheta) + _yRefPoint ;
+	EnemySprite.setPosition(_x, _y ) ;
+	EnemySprite.setScale(_radius/200, _radius/200);
 		//cout << "asdedde x :   " << _radius << "    y:  "<< _y <<endl ;
 		
 		//if( (_radius)  > _centreRadius*4   )
@@ -205,12 +206,12 @@ void GyrussEnemy::ArchimedesSpiral()
 	{
 	_x = _radius*cos(_dTheta) + _xRefPoint  ; 
 	_y = _radius*sin(_dTheta) +    _yRefPoint;
-	
-	}
-	cout << _x<<" " << _y <<" " << _radius <<endl;
 	EnemySprite.setPosition(_x, _y ) ;
 	
-	EnemySprite.setScale(_radius/2000, _radius/2000 );
+	EnemySprite.setScale(abs(_radius)/2000, abs(_radius)/2000 );
+	
+	} 
+	cout << _x<<" " << _y <<" " << _radius <<endl;
 	
 	
 }
@@ -222,9 +223,9 @@ void GyrussEnemy::Limacons()
 	_dTheta +=0.01 ; 
 	_x = (a + b*sin(_dTheta))*cos(_dTheta)+_xRefPoint ;
 	_y = (a + b*sin(_dTheta))*sin(_dTheta)+ _yRefPoint;
+	_radius = sqrt((_x - _xRefPoint)*(_x - _xRefPoint) + (_y - _yRefPoint)*(_y - _yRefPoint));
+	cout << "radius " << _radius << endl;
 	EnemySprite.setPosition(_x, _y ) ;
-	
-	
-	
+	EnemySprite.setScale(abs(_radius)/2000, abs(_radius)/2000);
 }
 
