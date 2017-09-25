@@ -5,7 +5,7 @@
 
 Weapon::Weapon()
 {
-	if(_bulletTexture.loadFromFile("textures/bullet.png")){
+	if(_bulletTexture.loadFromFile("textures/enemyBullet.png")){
 		_bulletPrefab.setTexture(_bulletTexture);
 		_bulletPrefab.setScale(0.075f,0.075f);
 	}

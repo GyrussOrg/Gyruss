@@ -63,9 +63,9 @@ int main()
 	//////Enemy ??????????
 	
 	//list<GyrussEnemy> a(3); 
-	sf::Texture EnemyTexture,EnemyTexture1,EnemyTexture2;
+	sf::Texture EnemyTexture,EnemyTexture1,EnemyTexture2,EnemyTexture3,EnemyTexture4;
 	EnemyTexture.loadFromFile("textures/asteroid.png");
-	sf::Sprite EnemySprite, EnemySprite1, EnemySprite2,DeadEnemySprite ;
+	sf::Sprite EnemySprite, EnemySprite1, EnemySprite2, EnemySprite3, EnemySprite4,DeadEnemySprite ;
 	EnemySprite.setTexture(EnemyTexture) ;
 	EnemySprite.setOrigin(sf::Vector2f(EnemyTexture.getSize().x*0.5,EnemyTexture.getSize().y*0.5));
 	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
@@ -79,10 +79,16 @@ int main()
 	EnemyTexture2.loadFromFile("textures/laser.png");
 	EnemySprite2.setTexture(EnemyTexture2);
 	EnemySprite2.setScale(0.1,0.1);
-	EnemySprite2.setOrigin(sf::Vector2f(EnemyTexture2.getSize().x*0.5,EnemyTexture2.getSize().y*0.5));
 	GyrussEnemy testEnemyC(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite2, EnemyType::laser) ;
-	GyrussEnemy testEnemyD(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::satellites) ;
-	GyrussEnemy testEnemyE(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::ships) ;
+	EnemyTexture3.loadFromFile("textures/satellites.png");
+	EnemySprite3.setTexture(EnemyTexture3);
+	EnemySprite3.setScale(0.1,0.1);
+	GyrussEnemy testEnemyD(sf::Vector2<float>(500,700), sf::Vector2<float>(250,250), EnemySprite3, EnemyType::satellites) ;
+	EnemyTexture4.loadFromFile("textures/ship.png");
+	EnemySprite4.setTexture(EnemyTexture4);
+	EnemySprite4.setScale(0.1,0.1);
+	EnemySprite4.setOrigin(sf::Vector2f(EnemyTexture4.getSize().x*0.5,EnemyTexture4.getSize().y*0.5));
+	GyrussEnemy testEnemyE(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite4, EnemyType::ships) ;
 	
 	GyrussEnemy testEnemy1(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
 	GyrussEnemy enemies[5];
@@ -107,8 +113,8 @@ int main()
 	
 	for(int i =0 ; i<5 ; i++ )
 	{
-		enemies[i].getEnemyID(i+1) ;
-		enemies[i].randomAngle(  i+1);
+		//enemies[i].getEnemyID(i+1) ;
+		//enemies[i].randomAngle(  i+1);
 		
 	}	
 	
@@ -153,8 +159,8 @@ int main()
 			}
 			window.draw(background);
 			//for(auto i = 0; i < 5; i++){
-				testEnemyC.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-				mainPlayer.update(window,countFrames, 5.0f, testEnemyC.getEnemyBullets());
+				testEnemyE.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
+				mainPlayer.update(window,countFrames, 5.0f, testEnemyE.getEnemyBullets());
 
 			//}
 			//cout << endl;

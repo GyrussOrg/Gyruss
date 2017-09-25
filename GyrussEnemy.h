@@ -25,13 +25,12 @@ public:
 	float getEnemyAngle(){return _dTheta;}
 	deque<Bullet>& getEnemyBullets(){return _enemyWeapon.getBullets();}
 	bool isEnemyDead(){return _isDead;}
-	float randomAngle(int EnemyID);
 	void getEnemyID(const int EnemyID ){_EnemyID = EnemyID;} ; 
 	void moveCircular(float scaleFactor, float radius) ; 
 	void moveOutwards(float scaleFactor, float speed);
-	void lemniscate(float scaleFactor) ;
+	void lemniscate(float scaleFactor, float speed) ;
 	void converging(float scaleFactor ,float convergingRad, float clock) ; //not working properly
-	void ArchimedesSpiral(float scaleFactor);
+	void ArchimedesSpiral(float scaleFactor, float speed);
 	void Limacons(float scaleFactor)  ;
 	
 	void updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets, float clock);
