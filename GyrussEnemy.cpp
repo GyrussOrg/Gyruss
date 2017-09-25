@@ -66,7 +66,7 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 		
 		switch(_enemyType){
 			case EnemyType::ships:
-				if(clock > 5.0f ){
+				if(clock > 10.0f ){
 					converging(600,9.0f,clock);
 				} else{
 					lemniscate(1000, 20.0f);
@@ -74,12 +74,15 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 				lookAt(EnemySprite,_dTheta);
 				break;
 			case EnemyType::satellites:
-				if( frames > 1500){
+				if( clock > 13.0f){
 					converging(1500,9.0,clock);
 				} else{
-					frames++;
-					ArchimedesSpiral(1500, 10.0f);
+					if(clock > 0 && clock < 6.0f)
+						ArchimedesSpiral(1500, 50.0f);
+					else if( clock > 6.0f && clock < 13.0f)
+						ArchimedesSpiral(2000, -0.5f);
 				}
+				cout << " frames" << frames << endl;
 				break;
 			case EnemyType::laser:
 				moveOutwards(1000, 5.0f);
@@ -100,8 +103,6 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 				break;
 		}
 		
-		_enemyCollider.update(EnemySprite.getGlobalBounds());
-		
 		if(_enemyType == EnemyType::ships){
 			
 			if(frames%(rand()%500+1) == 1){
@@ -110,15 +111,16 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 			_enemyWeapon.weaponUpdate(window,sf::Vector2<float> (250,250), 1.0f);
 		}
 		_enemyCollider.update(EnemySprite.getGlobalBounds());
-		auto i = 0;
-		for(auto& bullet:playerBullets){
-			if(_enemyCollider.collided(bullet.bulletCollider)){
-				if(bullet.bulletCollider.isCollided()){
-					continue;
-				}
-				bullet.bulletCollider.setCollisionStatus(true);
-				if(bullet.bulletCollider.getTag() == "playerBullet"){
-					_isDead = true;
+		if(!(_enemyType == EnemyType::asteroids || _enemyType == EnemyType::laser)){
+			for(auto& bullet:playerBullets){
+				if(_enemyCollider.collided(bullet.bulletCollider)){
+					if(bullet.bulletCollider.isCollided()){
+						continue;
+					}
+					bullet.bulletCollider.setCollisionStatus(true);
+					if(bullet.bulletCollider.getTag() == "playerBullet"){
+						_isDead = true;
+					}
 				}
 			}
 		}
@@ -128,14 +130,14 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 }
 
 
-GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprite& enemyObject, EnemyType enemyType = EnemyType::ships)
+GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprite& enemyObject, EnemyType enemyType = EnemyType::ships, int time)
 :_x{initPos.x} , _y{initPos.y}, _xRefPoint{refPoint.x}, _yRefPoint{refPoint.y} , EnemySprite{enemyObject}, _enemyType{enemyType}
 {
 		frames = 0;
 		_centreRadius   = 15 ; 
-		_xscale = EnemySprite.getScale().x ;
-		_yscale = EnemySprite.getScale().y ;
-
+		_isDead = false;
+		//for(auto i = 0; i < 5; i++)
+		convergingTime = time;
 	switch(enemyType){
 		case EnemyType::ships:
 			_dTheta = randomAngle();
@@ -145,6 +147,7 @@ GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprit
 			_dTheta = calcAngle(refPoint.y - initPos.y, initPos.x - refPoint.x);
 			_radius = abs(initPos.x - refPoint.x)/(cos(_dTheta) + 0.00001f);
 			_enemyCollider.setTag("satellite");
+			cout << convergingTime << " converging time" << endl;
 			break;
 		case EnemyType::laser:
 			_dTheta = randomAngle();
@@ -170,9 +173,9 @@ void GyrussEnemy::converging(float scaleFactor, float convergingRad, float clock
 {
 	
 	if(_radius > convergingRad && frames < 600){
-		moveOutwards(scaleFactor, -1.0f);
+		moveOutwards(scaleFactor, -5.0f);
 	}else{
-		if(frames < 600){
+		if(frames < convergingTime){
 			frames++;
 			moveCircular(scaleFactor, convergingRad);
 		} else {
@@ -196,8 +199,11 @@ void GyrussEnemy::lemniscate(float scaleFactor, float speed) {
 void GyrussEnemy::ArchimedesSpiral(float scaleFactor, float speed) 
 {
 	
-	_dTheta  += 0.0005*speed    ;
-	_radius =  500 / abs(_dTheta)   ;
+	_dTheta  += 0.1f;
+	if(speed >= 0)
+	_radius =  500 - _dTheta - speed*_dTheta/3.5f;
+	if(speed < 0)
+		_radius +=  speed*-1.0f;
 	
 	if(_radius >= 0 )
 	{

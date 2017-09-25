@@ -17,7 +17,7 @@ class GyrussEnemy
 {
 public:
 	GyrussEnemy();
-	GyrussEnemy(sf::Vector2f initPos , sf::Vector2f refPoint , sf::Sprite& enemyObject,EnemyType enemyType);
+	GyrussEnemy(sf::Vector2f initPos , sf::Vector2f refPoint , sf::Sprite& enemyObject,EnemyType enemyType, int time = 600);
 	void enemySetup(sf::Texture texture);
 	sf::Vector2f getEnemyPosition(){return EnemySprite.getPosition();}
 	float getEnemyRotation(){return EnemySprite.getRotation();}
@@ -48,7 +48,7 @@ private:
 		float _radius,_centreRadius;
 		float _dTheta,_xscale,_yscale;
 		int _Maxenemy;
-		int _EnemyID , frames ; 
+		int _EnemyID , frames,convergingTime ; 
 		float _x, _y,  _dx , _dy , _xRefPoint, _yRefPoint;
 		bool _isDead;
 		EnemyType _enemyType;
