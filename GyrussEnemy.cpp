@@ -37,15 +37,13 @@ void GyrussEnemy::moveCircular(float scaleFactor, float radius)
  float GyrussEnemy::randomAngle(int EnemyID){
 	srand(time(0));
 	int temp1 = (rand()%13 + 1);
-	float Temp =  8.0*atan(1.0)/temp1 ;
+	float Temp =  8.0*atan(1.0)/float(temp1) ;
 	
-	//cout  << EnemyID  <<"   rand number: "<< temp1 <<endl; 
 	return  Temp* EnemyID ;
 }
 void GyrussEnemy::moveOutwards(float scaleFactor, float speed){
 	_radius += speed;
 	_dTheta = _dTheta ;
-	//cout << "ID " << _EnemyID  << " anNGle  5" << _dTheta  <<endl; 
 	_x =  _radius*cos(_dTheta) + _xRefPoint;
 	_y =  _radius*sin(_dTheta) +  _yRefPoint; 
 	
@@ -175,14 +173,13 @@ float calcAngle(float yDiff, float xDiff){
 void GyrussEnemy::converging(float scaleFactor, float convergingRad, float clock) 
 {
 	
-	if(_radius > convergingRad && frames < 180){
+	if(_radius > convergingRad && frames < 260){
 		moveOutwards(scaleFactor, -0.1f);
 	}else{
-		if(frames < 180){
+		if(frames < 260){
 			frames++;
 			moveCircular(scaleFactor, convergingRad);
 		} else {
-			cout << frames << " <-- frames" << endl;
 			moveOutwards(scaleFactor, 1.0f);
 		}
 	}

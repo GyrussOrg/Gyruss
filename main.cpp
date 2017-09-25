@@ -63,9 +63,9 @@ int main()
 	//////Enemy ??????????
 	
 	//list<GyrussEnemy> a(3); 
-	sf::Texture EnemyTexture,EnemyTexture1;
+	sf::Texture EnemyTexture,EnemyTexture1,EnemyTexture2;
 	EnemyTexture.loadFromFile("textures/asteroid.png");
-	sf::Sprite EnemySprite, EnemySprite1, DeadEnemySprite ;
+	sf::Sprite EnemySprite, EnemySprite1, EnemySprite2,DeadEnemySprite ;
 	EnemySprite.setTexture(EnemyTexture) ;
 	EnemySprite.setOrigin(sf::Vector2f(EnemyTexture.getSize().x*0.5,EnemyTexture.getSize().y*0.5));
 	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
@@ -76,7 +76,11 @@ int main()
 	EnemySprite1.setScale(0.1,0.1);
 	EnemySprite1.setOrigin(sf::Vector2f(EnemyTexture1.getSize().x*0.5,EnemyTexture1.getSize().y*0.5));
 	GyrussEnemy testEnemyB(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite1, EnemyType::generator) ;
-	GyrussEnemy testEnemyC(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::laser) ;
+	EnemyTexture2.loadFromFile("textures/laser.png");
+	EnemySprite2.setTexture(EnemyTexture2);
+	EnemySprite2.setScale(0.1,0.1);
+	EnemySprite2.setOrigin(sf::Vector2f(EnemyTexture2.getSize().x*0.5,EnemyTexture2.getSize().y*0.5));
+	GyrussEnemy testEnemyC(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite2, EnemyType::laser) ;
 	GyrussEnemy testEnemyD(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::satellites) ;
 	GyrussEnemy testEnemyE(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::ships) ;
 	
@@ -149,8 +153,8 @@ int main()
 			}
 			window.draw(background);
 			//for(auto i = 0; i < 5; i++){
-				testEnemyB.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-				mainPlayer.update(window,countFrames, 5.0f, testEnemyB.getEnemyBullets());
+				testEnemyC.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
+				mainPlayer.update(window,countFrames, 5.0f, testEnemyC.getEnemyBullets());
 
 			//}
 			//cout << endl;
