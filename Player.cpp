@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "Weapon.h"
 
 Player::Player(float refX, float refY, float radius){
 		_refX = refX;
@@ -9,7 +8,7 @@ Player::Player(float refX, float refY, float radius){
 		_xPos = 250;
 		_yPos = 450;
 		_lives = 4;
-		setTag("playerCollider");
+		//setTag("playerCollider");
 }
 
 
@@ -23,11 +22,12 @@ void  Player::move(float speed){
 		_yPos = _refY + _radius*sin(_angle);
 }
 
-void Player::update(deque<Bullet>& enemyBullets){
+void Player::update(sf::RenderWindow& window,deque<Bullet>& enemyBullets){
 	 
 	sf::Vector2f ref(_refX,_refY) ;
-	//_gun.weaponUpdate(window, ref, -1.0f);
+	weaponUpdate(window, ref, -1.0f);
 	for(auto& bullet:enemyBullets){
+		/*
 		if(collided(bullet.bulletCollider) && _lives > 0){
 			if(bullet.bulletCollider.isCollided()){
 				continue;
@@ -35,9 +35,9 @@ void Player::update(deque<Bullet>& enemyBullets){
 			cout << "Collided with " << bullet.bulletCollider.getTag() << " lives " << _lives << endl;
 			bullet.bulletCollider.setCollisionStatus(true);
 			_lives -=1;
-		}
+		}*/
 	}
 	if(_lives > 0){
-		setCollisionStatus(false);
+		//setCollisionStatus(false);
 	}
 }

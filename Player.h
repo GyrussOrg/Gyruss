@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include  <SFML/System.hpp>
+#include <SFML/Window.hpp>
 #include <cmath>
 #include <vector>
 #include <deque>
@@ -12,7 +13,7 @@
 
 using namespace std;
 
-class Player: public Collider
+class Player:public Weapon
 {
 public:
 	Player(float refX,float refY, float radius);
@@ -20,11 +21,11 @@ public:
 	float getRadius(){return _radius;}
 	float getX(){return _xPos;}
 	float getY(){return _yPos;}
-	void shoot(){ _gun.playerShoot(*this,"playerBullet");}
+	void shoot(){ playerShoot(_radius,_angle,"playerBullet");}
 	void move(float speed);
 	int getPlayerLives(){return _lives;}
-	deque<Bullet>& getPlayerBullets(){return _gun.getBullets();}
-	void update(deque<Bullet>& enemyBullets);
+	deque<Bullet>& getPlayerBullets(){return getBullets();}
+	void update(sf::RenderWindow& window, deque<Bullet>& enemyBullets);
 	~Player();
 private:
 	float _radius;
@@ -34,8 +35,6 @@ private:
 	float _xPos;
 	float _yPos;
 	int _lives;
-	Weapon _gun;
-	//Collider _playerCollider;
 };
 
 #endif // PLAYER_H

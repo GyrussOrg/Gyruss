@@ -113,6 +113,7 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 		_enemyCollider.colliderUpdate(EnemySprite.getGlobalBounds());
 		if(!(_enemyType == EnemyType::asteroids || _enemyType == EnemyType::laser)){
 			for(auto& bullet:playerBullets){
+				/*
 				if(_enemyCollider.collided(bullet.bulletCollider)){
 					if(bullet.bulletCollider.isCollided()){
 						continue;
@@ -121,7 +122,7 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 					if(bullet.bulletCollider.getTag() == "playerBullet"){
 						_isDead = true;
 					}
-				}
+				}*/
 			}
 		}
 	

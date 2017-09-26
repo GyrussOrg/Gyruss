@@ -45,7 +45,7 @@ float lookAt2(sf::Sprite& sprite, float angle = 0 ,float xPosition = 250, float 
 		tempAngle = angle;
 		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
 	}
-	cout << sprite.getRotation() << " --- rotation" << endl;
+	//cout << sprite.getRotation() << " --- rotation" << endl;
 	return tempAngle*180/(4*atan(1));
 } 
 
@@ -154,6 +154,7 @@ int main()
 				background.setTexture(backgroundTexture);
 			}
 			window.draw(background);
+			
 			testEnemyE.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
 			testEnemyD.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
 			testEnemyD1.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
@@ -172,11 +173,11 @@ int main()
 			}
 			playerSprite.setPosition(mainPlayer.getX(),mainPlayer.getY());
 			lookAt2(playerSprite, mainPlayer.getAngle());
-			mainPlayer.colliderUpdate(playerSprite.getGlobalBounds());
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && (countFrames%7 == 0)){
+			//mainPlayer.colliderUpdate(playerSprite.getGlobalBounds());
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && (countFrames%3 == 0)){
 				mainPlayer.shoot();
 			}
-			mainPlayer.update(testEnemyE.getEnemyBullets());
+			mainPlayer.update(window,testEnemyE.getEnemyBullets());
 
 		
 		}

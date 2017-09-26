@@ -5,49 +5,19 @@
 #include <vector>
 #include <deque>
 #include <cmath>
-#include "Collider.h"
+#include "Bullet.h"
 #include <iostream>
 using namespace std;
-class Player;
 class GyrussEnemy;
 
 
-
-struct Bullet{
-		sf::Sprite bullet;
-		float xPos;
-		float yPos;
-		float angle;
-		float radius;
-		float xScale,yScale;
-		Collider bulletCollider;
-		Bullet(sf::Sprite bulletSprite, sf::Vector2f position, float rotation, float dist, string name = "bullet"): 
-		bullet{bulletSprite}, angle{rotation}, radius{dist}
-		{
-			bullet.setPosition(position);
-			bullet.setRotation(rotation);
-			bullet.setOrigin(bullet.getTexture()->getSize().x*0.5f,bullet.getTexture()->getSize().y*0.5f);
-			bulletCollider.setTag(name);
-			xScale = bullet.getScale().x;
-			yScale = bullet.getScale().y;
-		}
-		void updatePosition(sf::Vector2f refPoint){
-			xPos = radius*cos(angle) + refPoint.x;
-			yPos = radius*sin(angle) + refPoint.y;
-			bullet.setPosition(xPos,yPos);
-			bullet.setScale(xScale*radius/300, yScale*radius/400);
-			bulletCollider.colliderUpdate(bullet.getGlobalBounds());
-		}
-};
-
-class Weapon
+class Weapon: public Bullet
 {
 public:
 	Weapon();
-	void playerShoot(Player& player, string name);
+	void playerShoot(float radius, float angle, string name);
 	void enemyShoot(GyrussEnemy& enemy, string name);
 	void weaponUpdate(sf::RenderWindow& window, sf::Vector2f, float bulletDir);
-	vector<Collider> getBulletCollider(); //problematic
 	deque<Bullet>& getBullets(){return _allBullets;}
 	~Weapon();
 private:
