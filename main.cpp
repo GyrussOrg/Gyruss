@@ -18,6 +18,36 @@ void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
 		//enemieVector.push_back(testEnemy);
 	}
 }
+float calcAngle2(float yDiff, float xDiff){
+	
+	float angle = atan(yDiff/(xDiff+ 0.00001f));
+	if(yDiff >= 0 && xDiff >= 0){ //first quadrant
+		angle *=-1 ;
+	} else if (yDiff >= 0 && xDiff < 0){ //second quadrant
+		angle = 4*atan(1) - angle;
+	} else if (yDiff < 0 && xDiff < 0){ //third quadrant
+		angle = 4*atan(1) - angle;
+	}else if (yDiff < 0 && xDiff >= 0){ //fourth quadrant
+		angle *=-1 ;
+	}
+	return angle;
+}
+
+
+float lookAt2(sf::Sprite& sprite, float angle = 0 ,float xPosition = 250, float yPosition = 250){
+	float tempAngle;
+	if(!(xPosition == 250 && yPosition == 250)){
+		auto tempX = sprite.getPosition().x;
+		auto tempY = sprite.getPosition().y;
+		tempAngle = calcAngle2(yPosition - tempY ,  tempX - xPosition);
+		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
+	} else {
+		tempAngle = angle;
+		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
+	}
+	cout << sprite.getRotation() << " --- rotation" << endl;
+	return tempAngle*180/(4*atan(1));
+} 
 
 
 sf::Sprite createGameObject(sf::Texture& texture, string TexturePath, sf::Vector2f initPos){
@@ -38,7 +68,6 @@ int main()
     sf::Time time;
 	auto countFrames = 0;
 	bool playGame = false;
-	//Weapon weapon;
     /////////////////////////////
 
     sf::RenderWindow window(sf::VideoMode(500,500), "Gyruss", sf::Style::Close);
@@ -53,21 +82,20 @@ int main()
 	spT1.loadFromFile("textures/tempBack/2.jpg");
 	spT2.loadFromFile("textures/tempBack/3.jpg");
 	sf::Sprite background(spT1);
-	background.setScale(500/( (float)background.getTextureRect().width),500/((float)background.getTextureRect().height));
 	//////Enemy ??????????
 	
 	//list<GyrussEnemy> a(3); 
 	sf::Texture EnemyTexture,EnemyTexture1,EnemyTexture2,EnemyTexture3,EnemyTexture4;
-	EnemyTexture.loadFromFile("textures/asteroid.png");
-	sf::Sprite EnemySprite, EnemySprite1, EnemySprite2, EnemySprite3, EnemySprite4,DeadEnemySprite ;
-	EnemySprite.setTexture(EnemyTexture) ;
-	EnemySprite.setOrigin(sf::Vector2f(EnemyTexture.getSize().x*0.5,EnemyTexture.getSize().y*0.5));
-	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
+	sf::Sprite EnemySprite, EnemySprite1,EnemySprite2,EnemySprite3,EnemySprite4;
 	
 	EnemySprite = createGameObject(EnemyTexture,"textures/asteroid.png",sf::Vector2<float> (250,450));
 	GyrussEnemy testEnemyA(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
 	EnemySprite1 = createGameObject(EnemyTexture1,"textures/generator.png",sf::Vector2<float> (250,450));
 	GyrussEnemy testEnemyB(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite1, EnemyType::generator);
+	GyrussEnemy testEnemyB1(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite1, EnemyType::generator);
+	GyrussEnemy testEnemyB2(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite1, EnemyType::generator);
+	GyrussEnemy testEnemyB3(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite1, EnemyType::generator);
+	GyrussEnemy testEnemyB4(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite1, EnemyType::generator);
 	EnemySprite2 = createGameObject(EnemyTexture2,"textures/laser.png",sf::Vector2<float> (250,450));
 	GyrussEnemy testEnemyC(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite2, EnemyType::laser);
 	EnemySprite3 = createGameObject(EnemyTexture3,"textures/satellites.png",sf::Vector2<float> (250,450));
@@ -80,25 +108,12 @@ int main()
 	EnemySprite4 = createGameObject(EnemyTexture4,"textures/ship.png",sf::Vector2<float> (250,450));
 	GyrussEnemy testEnemyE(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite4, EnemyType::ships);
 	
-	GyrussEnemy testEnemy1(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids);
-//	GyrussEnemy enemies[5];
-	
-	vector<GyrussEnemy> VectorOfEnimies ; 
-	
-
-
-	
-	//EnemiesManage(VectorOfEnimies, 5);
-	GyrussEnemy deadEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), DeadEnemySprite, EnemyType::asteroids);
-	
-	
 	float timer ; 
-	//float timer1 ; 
 	////////////////////////////
 	sf::Texture playerTexture;
 	sf::Sprite playerSprite = createGameObject(playerTexture,"textures/player.png", sf::Vector2<float> (250,450));
 	
-    Player mainPlayer(playerSprite, window.getSize(),250,250);
+    Player mainPlayer(250,250,200);
 	
 	int image_number  =80 ; 
 	
@@ -148,7 +163,20 @@ int main()
 			testEnemyC.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
 			testEnemyB.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
 			testEnemyA.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			mainPlayer.update(window,countFrames, 7.0f, testEnemyE.getEnemyBullets());
+			//for player
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+				mainPlayer.move(-7.0f);
+			}
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+				mainPlayer.move(7.0f);
+			}
+			playerSprite.setPosition(mainPlayer.getX(),mainPlayer.getY());
+			lookAt2(playerSprite, mainPlayer.getAngle());
+			mainPlayer.colliderUpdate(playerSprite.getGlobalBounds());
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && (countFrames%7 == 0)){
+				mainPlayer.shoot();
+			}
+			mainPlayer.update(testEnemyE.getEnemyBullets());
 
 		
 		}
@@ -158,6 +186,7 @@ int main()
 			lives.setPosition(20*j + 30, 460);
 			window.draw(lives);
 		}
+		window.draw(playerSprite);
         window.display();
 		countFrames++;
 		if(countFrames > 60 ){

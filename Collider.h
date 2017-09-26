@@ -18,7 +18,7 @@ public:
 	sf::FloatRect getCollider(){return _2Dcollider;}
 	string getTag(){return _tag;}
 	void setTag(string name){_tag = name;}
-	void update(sf::FloatRect parentBounds);
+	void colliderUpdate(sf::FloatRect parentBounds);
 	~Collider();
 private:
 	sf::FloatRect _2Dcollider;

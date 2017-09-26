@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include  <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
+#include  <SFML/System.hpp>
 #include <cmath>
 #include <vector>
 #include <deque>
@@ -13,22 +12,19 @@
 
 using namespace std;
 
-class Player
+class Player: public Collider
 {
 public:
-	sf::Clock clockP;
-	const float PI = 4*atan(1);
-	Player(){}
-	Player(sf::Sprite& sprite,sf::Vector2u screenSize,float refX,float refY);
-	sf::Vector2f getPlayerPosition(){return _playerSprite.getPosition();}
-	float getPlayerRotation(){return _playerSprite.getRotation();}
+	Player(float refX,float refY, float radius);
 	float getAngle(){return _angle;}
 	float getRadius(){return _radius;}
-	void moveLeft(float time);
-	void moveRight(float time);
+	float getX(){return _xPos;}
+	float getY(){return _yPos;}
+	void shoot(){ _gun.playerShoot(*this,"playerBullet");}
+	void move(float speed);
 	int getPlayerLives(){return _lives;}
 	deque<Bullet>& getPlayerBullets(){return _gun.getBullets();}
-	void update(sf::RenderWindow& window,int countFrames, float time ,deque<Bullet>& enemyBullets);
+	void update(deque<Bullet>& enemyBullets);
 	~Player();
 private:
 	float _radius;
@@ -38,9 +34,8 @@ private:
 	float _xPos;
 	float _yPos;
 	int _lives;
-	sf::Sprite _playerSprite;
 	Weapon _gun;
-	Collider _playerCollider;
+	//Collider _playerCollider;
 };
 
 #endif // PLAYER_H

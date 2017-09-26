@@ -17,7 +17,7 @@ Collider::~Collider()
 }
 
 
-void Collider::update(sf::FloatRect parentBounds){
+void Collider::colliderUpdate(sf::FloatRect parentBounds){
 	_2Dcollider = parentBounds;
 }
 

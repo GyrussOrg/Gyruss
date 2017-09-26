@@ -20,11 +20,11 @@ Weapon::~Weapon()
 
 void Weapon::playerShoot(Player& playerObject, string name){
 	//spawns bullet and stores it in array
-	Bullet bulletSpawn(_bulletPrefab, playerObject.getPlayerPosition(), playerObject.getPlayerRotation(),playerObject.getRadius(),name);
+	//Bullet bulletSpawn(_bulletPrefab, playerObject.getPlayerPosition(), playerObject.getPlayerRotation(),playerObject.getRadius(),name);
 		//cout << "bullet pos " << bulletSpawn.bullet.getPosition().x << " " << bulletSpawn.bullet.getPosition().y << endl;
 		
-	bulletSpawn.angle = playerObject.getAngle();
-	_allBullets.push_back(bulletSpawn);
+	//bulletSpawn.angle = playerObject.getAngle();
+	//_allBullets.push_back(bulletSpawn);
 }
 void Weapon::enemyShoot(GyrussEnemy& enemyObject, string name){
 	//spawns bullet and stores it in array

@@ -36,7 +36,7 @@ struct Bullet{
 			yPos = radius*sin(angle) + refPoint.y;
 			bullet.setPosition(xPos,yPos);
 			bullet.setScale(xScale*radius/300, yScale*radius/400);
-			bulletCollider.update(bullet.getGlobalBounds());
+			bulletCollider.colliderUpdate(bullet.getGlobalBounds());
 		}
 };
 

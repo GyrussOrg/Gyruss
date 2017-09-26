@@ -82,7 +82,6 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 					else if( clock > 6.0f && clock < 13.0f)
 						ArchimedesSpiral(2000, -0.5f);
 				}
-				cout << " frames" << frames << endl;
 				break;
 			case EnemyType::laser:
 				moveOutwards(1000, 5.0f);
@@ -105,12 +104,13 @@ void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerB
 		
 		if(_enemyType == EnemyType::ships){
 			
-			if(frames%(rand()%500+1) == 1){
+			//if(frames%(rand()%500+1) == 1){
+			if(frames%5){
 				_enemyWeapon.enemyShoot(*this, "enemyBullet");
 			}
 			_enemyWeapon.weaponUpdate(window,sf::Vector2<float> (250,250), 1.0f);
 		}
-		_enemyCollider.update(EnemySprite.getGlobalBounds());
+		_enemyCollider.colliderUpdate(EnemySprite.getGlobalBounds());
 		if(!(_enemyType == EnemyType::asteroids || _enemyType == EnemyType::laser)){
 			for(auto& bullet:playerBullets){
 				if(_enemyCollider.collided(bullet.bulletCollider)){
