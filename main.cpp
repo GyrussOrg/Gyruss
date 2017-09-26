@@ -5,6 +5,7 @@
 #include <queue>
 #include "Weapon.h"
 #include "Player.h"
+#include "GUIGyruss.h"
 #include "GyrussEnemy.h"
 #include "string"
 #include  "sstream"
@@ -29,11 +30,18 @@ void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
 
 void createPlayer(sf::Sprite&
 
- player, sf::Texture &texture,string path){
-	texture.loadFromFile(path);
+ player, sf::Texture &texture,string *path, auto counter) {
+		 
+
+if(counter%4 == 0 )	
+{
+	
+	texture.loadFromFile(path[counter%3]);
+}
+
 	player.setTexture(texture);
 	player.setOrigin(texture.getSize().x*0.5, 0);
-	player.setScale(0.2,0.1);
+	player.setScale(0.2,0.2);
 	player.setPosition(250, 450);
 }
 
@@ -43,22 +51,26 @@ int main()
     sf::Clock clock;
     sf::Time time;
 	auto countFrames = 0;
-	bool playGame = false;
+	bool playGame = false;	
 	//Weapon weapon;
     /////////////////////////////
+	GUIGyruss Guigen ;
+	
 
     sf::RenderWindow window(sf::VideoMode(500,500), "Gyruss", sf::Style::Close);
     window.setFramerateLimit(60);
-	
 	///Background
 	sf::Texture backgroundTexture;
 	string backGroundPaths[3] = {"textures/tempBack/1.jpg","textures/tempBack/2.jpg","textures/tempBack/3.jpg"};
+	string playerString[3] = { "textures/player.png" , "textures/player1.png","textures/player2.png" } ; 
 	
 	//Splash screen
-	sf::Texture spT1,spT2;
+	sf::Texture spT1,spT2 , tEnter , tHighscore, tInstructions;
+	
 	spT1.loadFromFile("textures/tempBack/2.jpg");
 	spT2.loadFromFile("textures/tempBack/3.jpg");
-	sf::Sprite background(spT1);
+	tInstructions.loadFromFile("textures/instructions.png");   
+	sf::Sprite background(spT1), instruction(tInstructions)   ;
 	background.setScale(500/( (float)background.getTextureRect().width),500/((float)background.getTextureRect().height));
 	//////Enemy ??????????
 	
@@ -70,6 +82,15 @@ int main()
 	EnemySprite.setOrigin(sf::Vector2f(EnemyTexture.getSize().x*0.5,EnemyTexture.getSize().y*0.5));
 	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
 	
+	sf::Texture logo1 ,logo2 ,logo3  ;
+	logo1.loadFromFile("textures/SplashScreen/logo1.png") ;
+	 logo2.loadFromFile("textures/SplashScreen/logo2.png") ;
+	 logo3.loadFromFile("textures/SplashScreen/logo3.png") ;
+	 sf::Sprite slogo1(logo1); 
+	 slogo1.setOrigin(-140,-70 ) ;
+	
+	
+
 	GyrussEnemy testEnemyA(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
 	EnemyTexture1.loadFromFile("textures/generator.png");
 	EnemySprite1.setTexture(EnemyTexture1);
@@ -85,7 +106,7 @@ int main()
 	
 	vector<GyrussEnemy> VectorOfEnimies ; 
 	
-
+	
 
 	
 	//EnemiesManage(VectorOfEnimies, 5);
@@ -97,7 +118,7 @@ int main()
 	////////////////////////////
 	sf::Sprite playerSprite;
 	sf::Texture playerTexture;
-	createPlayer(playerSprite, playerTexture,"textures/player.png");
+	createPlayer(playerSprite, playerTexture, playerString, countFrames);
     Player mainPlayer(playerSprite, window.getSize(),250,250);
 	
 	
@@ -131,6 +152,12 @@ int main()
 		
 		if(!playGame){
 			//Splash screen animation
+			
+			
+			 
+			
+			
+			
 			if(countFrames < 20){
 				background.setTexture(spT1);
 			} else {
@@ -139,7 +166,14 @@ int main()
 				if(countFrames > 40)
 					countFrames = 0;
 			}
+			
 			window.draw(background);
+			Guigen.generateGyrusslogo(countFrames, window );
+			instruction.setOrigin(-7,-270);
+			window.draw(instruction);
+
+			//window.draw(slogo1) ;
+			
 			//////
 		} else {
 			if(countFrames%5 == 0){
@@ -161,6 +195,7 @@ int main()
 			lives.setPosition(20*j + 30, 460);
 			window.draw(lives);
 		}
+		createPlayer(playerSprite, playerTexture, playerString, countFrames);
         window.display();
 		countFrames++;
 		if(countFrames > 60 ){
