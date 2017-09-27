@@ -1,168 +1,104 @@
 #include "GyrussEnemy.h"
-float calcAngle(float yDiff, float xDiff){
-	
-	float angle = atan(yDiff/(xDiff+ 0.00001f));
-	if(yDiff >= 0 && xDiff >= 0){ //first quadrant
-	} else if (yDiff >= 0 && xDiff < 0){ //second quadrant
-		angle += 4*atan(1);
-	} else if (yDiff < 0 && xDiff < 0){ //third quadrant
-		angle += 4*atan(1);
-	}else if (yDiff < 0 && xDiff >= 0){ //fourth quadrant
-		angle *=-1 ;
-	}
-	return angle;
-}
 
 
-float lookAt(sf::Sprite& sprite, float angle = 0 ,float xPosition = 250, float yPosition = 250){
-	float tempAngle;
-	if(!(xPosition == 250 && yPosition == 250)){
-		auto tempX = sprite.getPosition().x;
-		auto tempY = sprite.getPosition().y;
-		tempAngle = calcAngle(yPosition - tempY ,  tempX - xPosition);
-		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
-	} else {
-		tempAngle = angle;
-		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
-	}
-	return tempAngle*180/(4*atan(1));
-} 
- float randomAngle(){
-	srand(time(0));
-	int temp1 = (rand()%8 + 1);
-	float Temp =  8.0*atan(1.0)/float(temp1) ;
-	
-	return  Temp;
-}
-
-
-void GyrussEnemy::moveCircular(float scaleFactor, float radius)
-{
-	_radius = radius;
-	_x =  _radius*cos(_dTheta) + _xRefPoint;
-	_y =  _radius*sin(_dTheta) +  _yRefPoint;
-	EnemySprite.setPosition(_x, _y ) ;
-	EnemySprite.setScale(abs(_radius)/scaleFactor, abs(_radius)/scaleFactor);
-		_dTheta += 0.01f;
-}
-
-void GyrussEnemy::moveOutwards(float scaleFactor, float speed){
-	_radius += speed;
-	_dTheta = _dTheta ;
-	_x =  _radius*cos(_dTheta) + _xRefPoint;
-	_y =  _radius*sin(_dTheta) +  _yRefPoint; 
-	EnemySprite.setPosition(_x, _y ) ;
-	EnemySprite.setScale(abs(_radius)/scaleFactor, abs(_radius)/scaleFactor);
-	if(_radius  > 1000){
-		_dTheta += -1*randomAngle();
-		lookAt(EnemySprite,_dTheta); 
-		_radius = 0;
-		frames = 0;
-	}
-}
-
-void GyrussEnemy::updateScreen( sf::RenderWindow &window, deque<Bullet>& playerBullets, float clock){
-	if(!_isDead){
-		
-		switch(_enemyType){
+void GyrussEnemy::move(float clock){
+	switch(_enemyType){
 			case EnemyType::ships:
 				if(clock > 10.0f ){
-					converging(600,9.0f,clock);
+					converging(9.0f);
 				} else{
-					lemniscate(1000, 20.0f);
+					lemniscate(20.0f);
 				}
-				lookAt(EnemySprite,_dTheta);
 				break;
 			case EnemyType::satellites:
 				if( clock > 13.0f){
-					converging(1500,9.0,clock);
+					converging(9.0f);
 				} else{
 					if(clock > 0 && clock < 6.0f)
-						ArchimedesSpiral(1500, 50.0f);
+						ArchimedesSpiral(50.0f);
 					else if( clock > 6.0f && clock < 13.0f)
-						ArchimedesSpiral(2000, -0.5f);
+						ArchimedesSpiral(-0.5f);
 				}
 				break;
 			case EnemyType::laser:
-				moveOutwards(1000, 5.0f);
+				moveOutwards(5.0f, clock);
 				break;
 			case EnemyType::generator:
 				if(_dTheta > 6.28f){
-					converging(1000, 9.0f, clock);
-					EnemySprite.rotate(10);
+					converging(9.0f);
 				} else{
-					Limacons(1000);
-					EnemySprite.rotate(2);
+					Limacons();
 				}
 				break;
 			case EnemyType::asteroids:
-				moveOutwards(2000, 1.0f);
+				moveOutwards(1.0f,clock);
 				break;
 			default:
 				break;
-		}
-		
+	}
+}
+void GyrussEnemy::enemyUpdate(deque<Bullet>& playerBullets, float clock){
+	if(!_isDead){
+		move(clock);
 		if(_enemyType == EnemyType::ships){
 			
-			//if(frames%(rand()%500+1) == 1){
-			if(frames%5){
-				_enemyWeapon.enemyShoot(*this, "enemyBullet");
+			if(frames%(rand()%200+1) == 1){
+				shoot(_radius, _dTheta, "enemyBullet");
 			}
-			_enemyWeapon.weaponUpdate(window,sf::Vector2<float> (250,250), 1.0f);
 		}
-		_enemyCollider.colliderUpdate(EnemySprite.getGlobalBounds());
 		if(!(_enemyType == EnemyType::asteroids || _enemyType == EnemyType::laser)){
+			if(isCollided() && !_isDead){
+				setCollisionStatus(false);
+			}
 			for(auto& bullet:playerBullets){
-				/*
-				if(_enemyCollider.collided(bullet.bulletCollider)){
-					if(bullet.bulletCollider.isCollided()){
+				if(collided(bullet.getCollider())){
+					if(bullet.isCollided()){
 						continue;
 					}
-					bullet.bulletCollider.setCollisionStatus(true);
-					if(bullet.bulletCollider.getTag() == "playerBullet"){
+					bullet.setCollisionStatus(true);
+					if(bullet.getTag() == "playerBullet"){
+						playerBullets.pop_front();
 						_isDead = true;
+						break;
 					}
-				}*/
+				}
 			}
+		} else {
+			setCollisionStatus(false);
 		}
-	
 	}
-	window.draw(EnemySprite);
+	weaponUpdate(1.0f);
 }
 
 
-GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprite& enemyObject, EnemyType enemyType = EnemyType::ships, int time)
-:_x{initPos.x} , _y{initPos.y}, _xRefPoint{refPoint.x}, _yRefPoint{refPoint.y} , EnemySprite{enemyObject}, _enemyType{enemyType}
+GyrussEnemy::GyrussEnemy(float xRef, float yRef, float angle,EnemyType enemyType, int time)
 {
 		frames = 0;
-		_centreRadius   = 15 ; 
 		_isDead = false;
-		//for(auto i = 0; i < 5; i++)
 		convergingTime = time;
+		_enemyType = enemyType;
+		_yRefPoint = yRef;
+		_xRefPoint = yRef;
+		_dTheta = angle;
+		_x = 0;
+		_y = 0;
+		_radius = 0;
+		setCollisionStatus(false);
 	switch(enemyType){
 		case EnemyType::ships:
-			_dTheta = randomAngle();
-			_enemyCollider.setTag("ship");
+			setTag("ship");
 			break;
 		case EnemyType::satellites:
-			_dTheta = calcAngle(refPoint.y - initPos.y, initPos.x - refPoint.x);
-			_radius = abs(initPos.x - refPoint.x)/(cos(_dTheta) + 0.00001f);
-			_enemyCollider.setTag("satellite");
-			cout << convergingTime << " converging time" << endl;
+			setTag("satellite");
 			break;
 		case EnemyType::laser:
-			_dTheta = randomAngle();
-			lookAt(EnemySprite,_dTheta);
-			_enemyCollider.setTag("laser");
+			setTag("laser");
 			break;
 		case EnemyType::generator:
-			_dTheta = randomAngle();
-			_enemyCollider.setTag("generator");
+			setTag("generator");
 			break;
 		case EnemyType::asteroids:
-			_dTheta = randomAngle();
-			_radius = 0;
-			_enemyCollider.setTag("asteroid");
+			setTag("asteroid");
 			break;
 		default:
 			break;
@@ -170,59 +106,71 @@ GyrussEnemy::GyrussEnemy( sf::Vector2f initPos, sf::Vector2f refPoint ,sf::Sprit
 	
 }
 
-void GyrussEnemy::converging(float scaleFactor, float convergingRad, float clock) 
+void GyrussEnemy::converging(float convergingRad) 
 {
 	
 	if(_radius > convergingRad && frames < 600){
-		moveOutwards(scaleFactor, -5.0f);
+		moveOutwards(-5.0f, 4*atan(1));
 	}else{
 		if(frames < convergingTime){
 			frames++;
-			moveCircular(scaleFactor, convergingRad);
+			moveCircular(convergingRad);
 		} else {
-			moveOutwards(scaleFactor, 1.0f);
+			moveOutwards(2.0f,4*atan(1));
 		}
 	}
 }
 
 
-void GyrussEnemy::lemniscate(float scaleFactor, float speed) {
+void GyrussEnemy::lemniscate(float speed) {
 	_dTheta  += (0.0005 * speed);
 	int a = 200;
 	double TempCos =    fabs(cos(1 *_dTheta)) ;
-	_x =  cos(_dTheta)*sqrt( pow(a,2) *TempCos)    +_xRefPoint  ;
+	_x =  cos(_dTheta)*sqrt( pow(a,2) *TempCos)    +_xRefPoint;
 	_y = sin(_dTheta)*sqrt( pow(a,2) *TempCos )   +  _yRefPoint;
-	EnemySprite.setPosition(_x, _y ) ;
 	_radius = sqrt(  pow(  cos(_dTheta)*sqrt( pow(a,2) * TempCos)   ,2) + pow( sin(_dTheta)*sqrt( pow(a,2)*TempCos ),2)); 
-	EnemySprite.setScale(abs(_radius)/scaleFactor, abs(_radius)/scaleFactor);
 }
 
-void GyrussEnemy::ArchimedesSpiral(float scaleFactor, float speed) 
+void GyrussEnemy::ArchimedesSpiral(float speed) 
 {
 	
 	_dTheta  += 0.1f;
 	if(speed >= 0)
 	_radius =  500 - _dTheta - speed*_dTheta/3.5f;
-	if(speed < 0)
+	if(speed < 0){
 		_radius +=  speed*-1.0f;
-	
+	}
+
 	if(_radius >= 0 )
 	{
 		_x = _radius*cos(_dTheta) + _xRefPoint  ; 
 		_y = _radius*sin(_dTheta) +    _yRefPoint;
-		EnemySprite.setPosition(_x, _y ) ;
-		EnemySprite.setScale(abs(_radius)/scaleFactor, abs(_radius)/scaleFactor);	
-	}
-	
+	}	
 }
 
 
-void GyrussEnemy::Limacons(float scaleFactor) {
+void GyrussEnemy::Limacons() {
 	int a = 40 , b = 80 ;  
 	_dTheta +=0.005f ; 
 	_x = (a + b*sin(_dTheta))*cos(_dTheta)+_xRefPoint ;
 	_y = (a + b*sin(_dTheta))*sin(_dTheta)+ _yRefPoint;
 	_radius = sqrt((_x - _xRefPoint)*(_x - _xRefPoint) + (_y - _yRefPoint)*(_y - _yRefPoint));
-	EnemySprite.setPosition(_x, _y ) ;
-	EnemySprite.setScale(abs(_radius)/scaleFactor, abs(_radius)/scaleFactor);
+}
+void GyrussEnemy::moveCircular(float radius)
+{
+	_radius = radius;
+	_x =  _radius*cos(_dTheta) + _xRefPoint;
+	_y =  _radius*sin(_dTheta) +  _yRefPoint;
+	_dTheta += 0.01f;
+}
+
+void GyrussEnemy::moveOutwards(float speed, float angle){
+	_radius += speed;
+	_x =  _radius*cos(_dTheta) + _xRefPoint;
+	_y =  _radius*sin(_dTheta) +  _yRefPoint;
+	if(_radius  > 1000){
+		_dTheta += -1*angle;
+		_radius = 0;
+		frames = 0;
+	}
 }

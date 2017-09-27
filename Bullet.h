@@ -2,17 +2,19 @@
 #define BULLET_H
 #include <iostream>
 #include <cmath>
-#include <SFML/Graphics.hpp>
 #include "Collider.h"
 
 using namespace std;
 
-class Bullet
+class Bullet: public Collider
 {
 public:
 	Bullet(float radius, float angle, string name = "bullet");
 	void moveBullet(float speed){ _radius += speed;}
-	void bulletUpdate(sf::Vector2f refPoint,  sf::Sprite& bullet);
+	void bulletUpdate(const float xRef, const float yRef);
+	float getXpos(){return _xPos;}
+	float getYpos(){return _yPos;}
+	float getRadius(){return _radius;}
 	~Bullet();
 	
 private:

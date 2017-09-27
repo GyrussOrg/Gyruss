@@ -11,12 +11,12 @@ class Collider
 public:
 	Collider();
 	Collider(sf::FloatRect& parentBounds);
-	bool collided(vector<Collider>& gameObjects, int& index);
 	bool collided(Collider& gameObject);
 	void setCollisionStatus(bool iscollided){_isCollided = iscollided;}
-	bool isCollided(){return _isCollided;}
-	sf::FloatRect getCollider(){return _2Dcollider;}
-	string getTag(){return _tag;}
+	bool isCollided()const {return _isCollided;}
+	sf::FloatRect getColliderBounds()const{return _2Dcollider;}
+	Collider& getCollider(){return *this;}
+	string getTag()const{return _tag;}
 	void setTag(string name){_tag = name;}
 	void colliderUpdate(sf::FloatRect parentBounds);
 	~Collider();

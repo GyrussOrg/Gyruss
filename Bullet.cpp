@@ -4,14 +4,12 @@ Bullet::Bullet(float radius, float angle,  string name)
 {
 	_angle = angle;
 	_radius = radius;
-	//setTag(name);
+	setTag(name);
 }
 
-void Bullet::bulletUpdate(sf::Vector2f refPoint, sf::Sprite& bullet){
-	_xPos = _radius*cos(_angle) + refPoint.x;
-	_yPos = _radius*sin(_angle) + refPoint.y;
-	bullet.setPosition(_xPos,_yPos);
-	//colliderUpdate(bullet.getGlobalBounds());
+void Bullet::bulletUpdate(const float xRef, const float yRef){
+	_xPos = _radius*cos(_angle) + xRef;
+	_yPos = _radius*sin(_angle) + yRef;
 }
 
 Bullet::~Bullet()
