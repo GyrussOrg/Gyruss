@@ -8,8 +8,17 @@
 #include "GUIGyruss.h"
 #include "GyrussEnemy.h"
 #include "string"
+#include  "sstream"
+#include "ScoreCount.h"
+
 
 using namespace std;
+
+
+
+
+
+
 
 void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
 {
@@ -19,7 +28,6 @@ void EnemiesManage( GyrussEnemy &enemieVector , int NumberOfEnimes)
 		//enemieVector.push_back(testEnemy);
 	}
 }
-
 
 
 void createPlayer(sf::Sprite&
@@ -37,21 +45,16 @@ if(counter%4 == 0 )
 	player.setOrigin(texture.getSize().x*0.5, 0);
 	player.setScale(0.2,0.2);
 	player.setPosition(250, 450);
-=======
-sf::Sprite createGameObject(sf::Texture& texture, string TexturePath, sf::Vector2f initPos){
-	sf::Sprite sprite;
-	texture.loadFromFile(TexturePath);
-	sprite.setTexture(texture);
-	sprite.setOrigin(sf::Vector2f(texture.getSize().x*0.5,texture.getSize().y*0.5));
-	sprite.setScale(0.2,0.1);
-	sprite.setPosition(initPos.x, initPos.y);
-	return sprite;
->>>>>>> b94824d98d34f27a827acf8fadd7a3148db1fae1
 }
-
 
 int main()
 {   
+	//test 
+	
+	ScoreCount  TryHigh ;
+   
+	
+	
 	//////////////////for checking frame rate
     sf::Clock clock;
     sf::Time time;
@@ -80,14 +83,13 @@ int main()
 	//////Enemy ??????????
 	
 	//list<GyrussEnemy> a(3); 
-	sf::Texture EnemyTexture,EnemyTexture1,EnemyTexture2,EnemyTexture3,EnemyTexture4;
+	sf::Texture EnemyTexture,EnemyTexture1;
 	EnemyTexture.loadFromFile("textures/asteroid.png");
-	sf::Sprite EnemySprite, EnemySprite1, EnemySprite2, EnemySprite3, EnemySprite4,DeadEnemySprite ;
+	sf::Sprite EnemySprite, EnemySprite1, DeadEnemySprite ;
 	EnemySprite.setTexture(EnemyTexture) ;
 	EnemySprite.setOrigin(sf::Vector2f(EnemyTexture.getSize().x*0.5,EnemyTexture.getSize().y*0.5));
 	GyrussEnemy testEnemy(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
 	
-<<<<<<< HEAD
 	sf::Texture logo1 ,logo2 ,logo3  ;
 	logo1.loadFromFile("textures/SplashScreen/logo1.png") ;
 	 logo2.loadFromFile("textures/SplashScreen/logo2.png") ;
@@ -97,26 +99,18 @@ int main()
 	
 	
 
-=======
-	EnemySprite = createGameObject(EnemyTexture,"textures/asteroid.png",sf::Vector2<float> (250,450));
->>>>>>> b94824d98d34f27a827acf8fadd7a3148db1fae1
 	GyrussEnemy testEnemyA(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
-	EnemySprite1 = createGameObject(EnemyTexture1,"textures/generator.png",sf::Vector2<float> (250,450));
-	GyrussEnemy testEnemyB(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite1, EnemyType::generator);
-	EnemySprite2 = createGameObject(EnemyTexture2,"textures/laser.png",sf::Vector2<float> (250,450));
-	GyrussEnemy testEnemyC(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite2, EnemyType::laser);
-	EnemySprite3 = createGameObject(EnemyTexture3,"textures/satellites.png",sf::Vector2<float> (250,450));
-	EnemySprite3.setScale(0.2,0.2);
-	GyrussEnemy testEnemyD(sf::Vector2<float>(0,0), sf::Vector2<float>(250,250), EnemySprite3, EnemyType::satellites, 640);
-	GyrussEnemy testEnemyD1(sf::Vector2<float>(0,100), sf::Vector2<float>(250,250), EnemySprite3, EnemyType::satellites, 880);
-	GyrussEnemy testEnemyD2(sf::Vector2<float>(0,200), sf::Vector2<float>(250,250), EnemySprite3, EnemyType::satellites, 1020);
-	GyrussEnemy testEnemyD3(sf::Vector2<float>(0,300), sf::Vector2<float>(250,250), EnemySprite3, EnemyType::satellites, 1260);
-	GyrussEnemy testEnemyD4(sf::Vector2<float>(0,400), sf::Vector2<float>(250,250), EnemySprite3, EnemyType::satellites, 1400);
-	EnemySprite4 = createGameObject(EnemyTexture4,"textures/ship.png",sf::Vector2<float> (250,450));
-	GyrussEnemy testEnemyE(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite4, EnemyType::ships);
+	EnemyTexture1.loadFromFile("textures/generator.png");
+	EnemySprite1.setTexture(EnemyTexture1);   
+	EnemySprite1.setScale(0.1,0.1);
+	EnemySprite1.setOrigin(sf::Vector2f(EnemyTexture1.getSize().x*0.5,EnemyTexture1.getSize().y*0.5));
+	GyrussEnemy testEnemyB(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite1, EnemyType::generator) ;
+	GyrussEnemy testEnemyC(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::laser) ;
+	GyrussEnemy testEnemyD(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::satellites) ;
+	GyrussEnemy testEnemyE(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::ships) ;
 	
-	GyrussEnemy testEnemy1(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids);
-//	GyrussEnemy enemies[5];
+	GyrussEnemy testEnemy1(sf::Vector2<float>(250,250), sf::Vector2<float>(250,250), EnemySprite, EnemyType::asteroids) ;
+	//GyrussEnemy enemies[5];
 	
 	vector<GyrussEnemy> VectorOfEnimies ; 
 	
@@ -130,23 +124,21 @@ int main()
 	float timer ; 
 	//float timer1 ; 
 	////////////////////////////
+	sf::Sprite playerSprite;
 	sf::Texture playerTexture;
-<<<<<<< HEAD
 	createPlayer(playerSprite, playerTexture, playerString, countFrames);
     Player mainPlayer(playerSprite, window.getSize(),250,250);
 	
-=======
-	sf::Sprite playerSprite = createGameObject(playerTexture,"textures/player.png", sf::Vector2<float> (250,450));
->>>>>>> b94824d98d34f27a827acf8fadd7a3148db1fae1
 	
-    Player mainPlayer(playerSprite, window.getSize(),250,250);
-	
+
 	int image_number  =80 ; 
 	
     while(window.isOpen()){
 					
         sf::Event event;
         while(window.pollEvent(event)){
+			
+
 			
             switch (event.type){
             case sf::Event::Closed:
@@ -155,7 +147,6 @@ int main()
 			case sf::Event::KeyPressed:
 				if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
 					playGame = true;
-					clock.restart();
 				}
             }
         }
@@ -163,10 +154,21 @@ int main()
 		
 		if(!playGame){
 			//Splash screen animation
-			
-			
-			 
-			
+
+sf::Font font;
+font.loadFromFile("Tr2n.ttf"); 
+sf::Text text , text1 ;
+text.setFont(font);
+text.setCharacterSize(11); 
+text.setColor(sf::Color::Cyan);
+text.setStyle(sf::Text::Bold );
+
+text1.setFont(font);
+text1.setCharacterSize(11); 
+text1.setColor(sf::Color::White);
+text1.setStyle(sf::Text::Bold );
+
+
 			
 			
 			if(countFrames < 20){
@@ -182,6 +184,24 @@ int main()
 			Guigen.generateGyrusslogo(countFrames, window );
 			instruction.setOrigin(-7,-270);
 			window.draw(instruction);
+			
+			
+			stringstream displayscore ;
+			displayscore  <<"Current Score " << TryHigh.incCurrentScore()   ;
+			string sdisplayscore = displayscore.str();
+			
+			stringstream displayHighscore ;
+			displayHighscore  <<"Highscore " << TryHigh.getCurrentHighscore()   ;
+			
+			string sdisplayHighscore = displayHighscore.str();
+			
+			text.setString(sdisplayscore );
+			text.setPosition(340,470) ;
+			window.draw(text); 
+			
+			text1.setString(sdisplayHighscore );
+			text1.setPosition(340,480) ;
+			window.draw(text1); 
 
 			//window.draw(slogo1) ;
 			
@@ -193,18 +213,12 @@ int main()
 				background.setTexture(backgroundTexture);
 			}
 			window.draw(background);
-			testEnemyE.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			testEnemyD.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			testEnemyD1.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			testEnemyD2.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			testEnemyD3.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			testEnemyD4.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			testEnemyC.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			testEnemyB.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			testEnemyA.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
-			mainPlayer.update(window,countFrames, 7.0f, testEnemyE.getEnemyBullets());
+			//for(auto i = 0; i < 5; i++){
+				testEnemyB.updateScreen(window,mainPlayer.getPlayerBullets(), clock.getElapsedTime().asSeconds()) ;
+				mainPlayer.update(window,countFrames, 5.0f, testEnemyB.getEnemyBullets());
 
-		
+			//}
+			//cout << endl;
 		}
 		for(auto j = 0; j < mainPlayer.getPlayerLives(); j++){
 			sf::Sprite lives = playerSprite;
