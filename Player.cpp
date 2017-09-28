@@ -5,6 +5,7 @@ Player::Player(float refX, float refY, float radius){
 		_refY = refY;
 		_radius = radius;
 		_angle = 4*atan(1)/2;
+		frames = 0;
 		_xPos = 250;
 		_yPos = 450;
 		_lives = 4;
@@ -22,8 +23,9 @@ void  Player::move(float speed){
 		_yPos = _refY + _radius*sin(_angle);
 }
 
-void Player::playerUpdate( deque<Bullet>& enemyBullets, Collider& enemy){
+void Player::playerUpdate( deque<Bullet>& enemyBullets, Collider& enemy, float time){
 	weaponUpdate(-1.0f);
+	auto tempLives = _lives;
 	if(collided(enemy)){
 		_lives -= 1;
 		move(600);
@@ -41,6 +43,16 @@ void Player::playerUpdate( deque<Bullet>& enemyBullets, Collider& enemy){
 		}
 	}
 	if(_lives > 0){
-		setCollisionStatus(false);
+		if(tempLives > _lives ){
+			frames = 0;
+		}
+			frames++;
+			if(frames < 500){
+				setCollisionStatus(true);
+			
+			}
+			else {
+				setCollisionStatus(false);
+			}
 	}
 }

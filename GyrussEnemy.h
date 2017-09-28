@@ -27,6 +27,7 @@ public:
 	void ArchimedesSpiral(float speed);
 	void Limacons();
 	void enemyUpdate(deque<Bullet>& playerBullets, float clock);
+	int getDeadTime(){return deadTime;}
 	void move(float clock);
 	int getX() {return _x ;}
 	int getY() {return _y ;}   
@@ -37,7 +38,7 @@ public:
 private:
 		float _radius;
 		float _dTheta;
-		int frames,convergingTime ; 
+		int frames,convergingTime, deadTime ; 
 		float _x, _y, _xRefPoint, _yRefPoint;
 		bool _isDead;
 		EnemyType _enemyType;

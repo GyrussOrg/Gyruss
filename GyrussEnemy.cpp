@@ -39,6 +39,7 @@ void GyrussEnemy::move(float clock){
 }
 void GyrussEnemy::enemyUpdate(deque<Bullet>& playerBullets, float clock){
 	if(!_isDead){
+		deadTime = 600;
 		move(clock);
 		if(_enemyType == EnemyType::ships){
 			
@@ -66,6 +67,14 @@ void GyrussEnemy::enemyUpdate(deque<Bullet>& playerBullets, float clock){
 		} else {
 			setCollisionStatus(false);
 		}
+	} else {
+		deadTime--;
+		setCollisionStatus(true);
+		if(deadTime < 0){
+			_isDead = false;
+			deadTime = 600;
+			setCollisionStatus(false);
+		}
 	}
 	weaponUpdate(1.0f);
 }
@@ -80,6 +89,7 @@ GyrussEnemy::GyrussEnemy(float xRef, float yRef, float angle,EnemyType enemyType
 		_yRefPoint = yRef;
 		_xRefPoint = yRef;
 		_dTheta = angle;
+		deadTime = 0;
 		_x = 0;
 		_y = 0;
 		_radius = 0;
@@ -108,7 +118,6 @@ GyrussEnemy::GyrussEnemy(float xRef, float yRef, float angle,EnemyType enemyType
 
 void GyrussEnemy::converging(float convergingRad) 
 {
-	
 	if(_radius > convergingRad && frames < 600){
 		moveOutwards(-5.0f, 4*atan(1));
 	}else{
@@ -134,9 +143,11 @@ void GyrussEnemy::lemniscate(float speed) {
 void GyrussEnemy::ArchimedesSpiral(float speed) 
 {
 	
-	_dTheta  += 0.1f;
+	_dTheta  += 0.08f;
 	if(speed >= 0)
-	_radius =  500 - _dTheta - speed*_dTheta/3.5f;
+	_radius =  500 - _dTheta*5 - speed*_dTheta/3.5f ;
+	
+	
 	if(speed < 0){
 		_radius +=  speed*-1.0f;
 	}

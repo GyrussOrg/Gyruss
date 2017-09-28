@@ -15,6 +15,7 @@ public:
 	Weapon();
 	void shoot(float radius, float angle, string name);
 	void weaponUpdate(float bulletDir);
+	float getMagazineSize(){return _allBullets.size();}
 	deque<Bullet>& getBullets(){return _allBullets;}
 	~Weapon();
 private:

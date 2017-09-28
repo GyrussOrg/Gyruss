@@ -22,7 +22,8 @@ public:
 	void playerShoot(){ shoot(_radius,_angle,"playerBullet");}
 	void move(float speed);
 	int getPlayerLives(){return _lives;}
-	void playerUpdate( deque<Bullet>& enemyBullets, Collider& enemy);
+	void setPlayerLives(int lives){_lives = lives;}
+	void playerUpdate( deque<Bullet>& enemyBullets, Collider& enemy, float time);
 	~Player();
 private:
 	float _radius;
@@ -31,7 +32,7 @@ private:
 	float _refY;
 	float _xPos;
 	float _yPos;
-	int _lives;
+	int _lives, frames;
 };
 
 #endif // PLAYER_H
