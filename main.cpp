@@ -14,86 +14,12 @@
 
 using namespace std;
 
-float calcAngle(float yDiff, float xDiff){
-	
-	float angle = atan(yDiff/(xDiff+ 0.00001f));
-	if(yDiff >= 0 && xDiff >= 0){ //first quadrant
-		angle *=-1 ;
-	} else if (yDiff >= 0 && xDiff < 0){ //second quadrant
-		angle = 4*atan(1) - angle;
-	} else if (yDiff < 0 && xDiff < 0){ //third quadrant
-		angle = 4*atan(1) - angle;
-	}else if (yDiff < 0 && xDiff >= 0){ //fourth quadrant
-		angle *=-1 ;
-	}
-	return angle;
-}
-
-float lookAt(sf::Sprite& sprite, float angle = 0 ,float xPosition = 250, float yPosition = 250){
-	float tempAngle;
-	if(!(xPosition == 250 && yPosition == 250)){
-		auto tempX = sprite.getPosition().x;
-		auto tempY = sprite.getPosition().y;
-		tempAngle = calcAngle(yPosition - tempY ,  tempX - xPosition);
-		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
-	} else {
-		tempAngle = angle;
-		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
-	}
-	return tempAngle*180/(4*atan(1));
-} 
-
-void displayScore(sf::RenderWindow& window, ScoreCount& TryHigh, float clock){
-	sf::Font font;
-	font.loadFromFile("Tr2n.ttf"); 
-	sf::Text text , text1 ;
-	text.setFont(font);
-	text.setCharacterSize(11); 
-	text.setColor(sf::Color::Cyan);
-	text.setStyle(sf::Text::Bold );
-
-	text1.setFont(font);
-	text1.setCharacterSize(11); 
-	text1.setColor(sf::Color::White);
-	text1.setStyle(sf::Text::Bold );
-	
-	stringstream displayscore ;
-	auto score = TryHigh.getCurrentScore();
-	displayscore  <<"Current Score " << score ;
-	string sdisplayscore = displayscore.str();
-	
-	stringstream displayHighscore ;
-	displayHighscore  <<"Highscore " << TryHigh.getCurrentHighscore();
-	
-	string sdisplayHighscore = displayHighscore.str();
-	
-	text.setString(sdisplayscore );
-	text.setPosition(340,470) ;
-	window.draw(text); 
-	
-	text1.setString(sdisplayHighscore );
-	text1.setPosition(340,480) ;
-	window.draw(text1); 
-	
-	text.setFont(font);
-	text.setCharacterSize(18); 
-	text.setColor(sf::Color::Cyan);
-	text.setStyle(sf::Text::Bold );
-	text.setString("Press escape to exit");
-	text.setPosition(115,20) ;
-	if(clock < 2.0f)
-	window.draw(text); 
-}
-
-sf::Sprite createGameObject(sf::Texture& texture, string TexturePath, sf::Vector2f initPos){
-	sf::Sprite sprite;
-	texture.loadFromFile(TexturePath);
-	sprite.setTexture(texture);
-	sprite.setOrigin(sf::Vector2f(texture.getSize().x*0.5,texture.getSize().y*0.5));
-	sprite.setScale(0.2,0.1);
-	sprite.setPosition(initPos.x, initPos.y);
-	return sprite;
-}
+float calcAngle(float yDiff, float xDiff);
+float lookAt(sf::Sprite& sprite, float angle = 0 ,float xPosition = 250, float yPosition = 250);
+void displayScore(sf::RenderWindow& window, ScoreCount& TryHigh, float clock);
+sf::Sprite createGameObject(sf::Texture& texture, string TexturePath, sf::Vector2f initPos);
+template<typename U>
+void spriteModifier(U& object,sf::Sprite& sprite, float scalefactor);
 
 int main()
 {   
@@ -175,7 +101,9 @@ int main()
 	EnemySprite.push_back(EnemySprite4);
 	//GyrussEnemy 
 	
+	//SpriteHandler
 	
+	//SpriteHandler<GyrussEnemy> spriteManager;
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -249,10 +177,7 @@ int main()
 			displayScore(window,TryHigh, clock.getElapsedTime().asSeconds());
 			int i = 0;
 			for(auto& testEnemyA: temp){
-				EnemySprite[i].setPosition(testEnemyA.getX(),testEnemyA.getY());
-				EnemySprite[i].setScale(testEnemyA.getEnemyRadius()/1000, testEnemyA.getEnemyRadius()/1000);
-				lookAt(EnemySprite[i],testEnemyA.getEnemyAngle());
-				testEnemyA.colliderUpdate(EnemySprite[i].getGlobalBounds());
+				spriteModifier(testEnemyA,EnemySprite[i],1000);
 				testEnemyA.enemyUpdate(mainPlayer.getBullets(),clock.getElapsedTime().asSeconds());
 				if(!testEnemyA.isEnemyDead()){
 					window.draw(EnemySprite[i]);
@@ -263,14 +188,9 @@ int main()
 				}
 				//draw bullets
 				
-				for(auto i = 0; i < testEnemyA.getBullets().size();i++){
-					
-					Bullet temp = testEnemyA.getBullets().at(i);
-					enemyBulletPrefab.setPosition(temp.getXpos(),temp.getYpos());
-					auto rad = temp.getRadius();
-					enemyBulletPrefab.setScale(rad*0.0004,rad*0.0005);
-					lookAt(enemyBulletPrefab, testEnemyA.getEnemyAngle());
-					testEnemyA.getBullets().at(i).colliderUpdate(enemyBulletPrefab.getGlobalBounds());
+				for(auto j = 0; j < testEnemyA.getBullets().size();j++){
+					Bullet &temp = testEnemyA.getBullets().at(j);
+					spriteModifier(temp , enemyBulletPrefab, 2500);
 					window.draw(enemyBulletPrefab);
 				}
 				
@@ -287,16 +207,12 @@ int main()
 					if(!testEnemyA.isEnemyDead())
 					mainPlayer.playerUpdate(testEnemyA.getBullets(),testEnemyA.getCollider(), clock.getElapsedTime().asSeconds());
 				}
-				playerSprite.setPosition(mainPlayer.getX(),mainPlayer.getY());
+				playerSprite.setPosition(mainPlayer.getXpos(),mainPlayer.getYpos());
 				lookAt(playerSprite, mainPlayer.getAngle());
 				
 				for(auto i = 0; i < mainPlayer.getBullets().size();i++){
-					Bullet temp = mainPlayer.getBullets().at(i);
-					PlayerBulletPrefab.setPosition(temp.getXpos(), temp.getYpos() );
-					auto rad = temp.getRadius();
-					PlayerBulletPrefab.setScale(rad*0.0004,rad*0.0005);
-					lookAt(PlayerBulletPrefab, mainPlayer.getAngle());
-					mainPlayer.getBullets().at(i).colliderUpdate(PlayerBulletPrefab.getGlobalBounds());
+					Bullet& temp = mainPlayer.getBullets().at(i);
+					spriteModifier(temp , PlayerBulletPrefab, 1500);
 					window.draw(PlayerBulletPrefab);
 				}
 				//update colliders
@@ -343,3 +259,91 @@ int main()
     return 0;
 }
 
+template<typename U>
+void spriteModifier(U& gameObject,sf::Sprite& sprite, float scalefactor){
+	sprite.setPosition(gameObject.getXpos(),gameObject.getYpos());
+	sprite.setScale(gameObject.getRadius()/(scalefactor/1.5), gameObject.getRadius()/scalefactor);
+	lookAt(sprite,gameObject.getAngle());
+	gameObject.colliderUpdate(sprite.getGlobalBounds());
+}
+
+float calcAngle(float yDiff, float xDiff){
+	
+	float angle = atan(yDiff/(xDiff+ 0.00001f));
+	if(yDiff >= 0 && xDiff >= 0){ //first quadrant
+		angle *=-1 ;
+	} else if (yDiff >= 0 && xDiff < 0){ //second quadrant
+		angle = 4*atan(1) - angle;
+	} else if (yDiff < 0 && xDiff < 0){ //third quadrant
+		angle = 4*atan(1) - angle;
+	}else if (yDiff < 0 && xDiff >= 0){ //fourth quadrant
+		angle *=-1 ;
+	}
+	return angle;
+}
+
+float lookAt(sf::Sprite& sprite, float angle,float xPosition, float yPosition){
+	float tempAngle;
+	if(!(xPosition == 250 && yPosition == 250)){
+		auto tempX = sprite.getPosition().x;
+		auto tempY = sprite.getPosition().y;
+		tempAngle = calcAngle(yPosition - tempY ,  tempX - xPosition);
+		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
+	} else {
+		tempAngle = angle;
+		sprite.setRotation(tempAngle*180/(4*atan(1)) - 90);
+	}
+	return tempAngle*180/(4*atan(1));
+} 
+
+void displayScore(sf::RenderWindow& window, ScoreCount& TryHigh, float clock){
+	sf::Font font;
+	font.loadFromFile("Tr2n.ttf"); 
+	sf::Text text , text1 ;
+	text.setFont(font);
+	text.setCharacterSize(11); 
+	text.setColor(sf::Color::Cyan);
+	text.setStyle(sf::Text::Bold );
+
+	text1.setFont(font);
+	text1.setCharacterSize(11); 
+	text1.setColor(sf::Color::White);
+	text1.setStyle(sf::Text::Bold );
+	
+	stringstream displayscore ;
+	auto score = TryHigh.getCurrentScore();
+	displayscore  <<"Current Score " << score ;
+	string sdisplayscore = displayscore.str();
+	
+	stringstream displayHighscore ;
+	displayHighscore  <<"Highscore " << TryHigh.getCurrentHighscore();
+	
+	string sdisplayHighscore = displayHighscore.str();
+	
+	text.setString(sdisplayscore );
+	text.setPosition(340,470) ;
+	window.draw(text); 
+	
+	text1.setString(sdisplayHighscore );
+	text1.setPosition(340,480) ;
+	window.draw(text1); 
+	
+	text.setFont(font);
+	text.setCharacterSize(18); 
+	text.setColor(sf::Color::Cyan);
+	text.setStyle(sf::Text::Bold );
+	text.setString("Press escape to exit");
+	text.setPosition(115,20) ;
+	if(clock < 2.0f)
+	window.draw(text); 
+}
+
+sf::Sprite createGameObject(sf::Texture& texture, string TexturePath, sf::Vector2f initPos){
+	sf::Sprite sprite;
+	texture.loadFromFile(TexturePath);
+	sprite.setTexture(texture);
+	sprite.setOrigin(sf::Vector2f(texture.getSize().x*0.5,texture.getSize().y*0.5));
+	sprite.setScale(0.2,0.1);
+	sprite.setPosition(initPos.x, initPos.y);
+	return sprite;
+}

@@ -15,6 +15,7 @@ public:
 	float getXpos(){return _xPos;}
 	float getYpos(){return _yPos;}
 	float getRadius(){return _radius;}
+	float getAngle(){return _angle;}
 	~Bullet();
 	
 private:

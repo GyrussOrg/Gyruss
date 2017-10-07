@@ -17,8 +17,8 @@ public:
 	Player(float refX,float refY, float radius);
 	float getAngle(){return _angle;}
 	float getRadius(){return _radius;}
-	float getX(){return _xPos;}
-	float getY(){return _yPos;}
+	float getXpos(){return _xPos;}
+	float getYpos(){return _yPos;}
 	void playerShoot(){ shoot(_radius,_angle,"playerBullet");}
 	void move(float speed);
 	int getPlayerLives(){return _lives;}
